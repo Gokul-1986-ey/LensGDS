@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PepsiCo – Competitive Intelligence Audit Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #004B93;
+    --accent: #E31837;
+    --dark: #0A0A0A;
+    --mid: #1C1C2E;
+    --text: #1A1A2E;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --green: #10B981;
+    --red: #EF4444;
+    --orange: #F59E0B;
+    --bg: #F8FAFC;
+    --white: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* Cover */
+  .cover {
+    background: linear-gradient(135deg, #004B93 0%, #002855 55%, #1A0030 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px 80px;
+    color: white;
+    page-break-after: always;
+  }
+  .cover-logo { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.6; font-family: Arial, sans-serif; }
+  .cover-badge { display: inline-block; background: var(--accent); color: white; font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 2px; margin-bottom: 24px; }
+  .cover h1 { font-size: 54px; font-weight: 700; line-height: 1.1; margin-bottom: 16px; }
+  .cover h1 span { color: #63B3ED; }
+  .cover .subtitle { font-size: 20px; opacity: 0.75; font-family: Arial, sans-serif; font-weight: 300; margin-bottom: 48px; }
+  .cover-divider { width: 80px; height: 3px; background: var(--accent); margin-bottom: 48px; }
+  .cover-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 32px; }
+  .cover-meta-item label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; display: block; margin-bottom: 6px; }
+  .cover-meta-item span { font-size: 15px; font-weight: 600; }
+  .cover-footer { font-family: Arial, sans-serif; font-size: 11px; opacity: 0.4; }
+
+  /* Layout */
+  .page { max-width: 1100px; margin: 0 auto; padding: 60px 60px; }
+  .section { margin-bottom: 72px; }
+  .section-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
+  .section-title { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; line-height: 1.2; }
+  .section-subtitle { font-size: 16px; color: var(--muted); font-family: Arial, sans-serif; margin-bottom: 32px; }
+  .section-divider { width: 48px; height: 3px; background: var(--accent); margin-bottom: 32px; }
+
+  /* Executive Summary */
+  .exec-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+  .exec-card { background: var(--white); border-radius: 8px; padding: 28px; border-left: 4px solid var(--primary); box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .exec-card.accent { border-left-color: var(--accent); }
+  .exec-card.green { border-left-color: var(--green); }
+  .exec-card h4 { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .exec-card ul { list-style: none; }
+  .exec-card ul li { font-family: Arial, sans-serif; font-size: 13.5px; color: var(--text); padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .exec-card ul li:last-child { border-bottom: none; }
+  .exec-card ul li::before { content: "→ "; color: var(--accent); font-weight: bold; }
+
+  /* KPI */
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 40px; }
+  .kpi-card { background: var(--white); border-radius: 8px; padding: 20px 16px; text-align: center; box-shadow: 0 1px 8px rgba(0,0,0,0.06); border-top: 3px solid var(--primary); }
+  .kpi-card.accent-top { border-top-color: var(--accent); }
+  .kpi-value { font-size: 26px; font-weight: 700; color: var(--primary); font-family: Arial, sans-serif; }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.orange { color: var(--orange); }
+  .kpi-label { font-family: Arial, sans-serif; font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-delta { font-family: Arial, sans-serif; font-size: 12px; margin-top: 4px; }
+  .kpi-delta.neg { color: var(--red); }
+  .kpi-delta.pos { color: var(--green); }
+
+  /* Overview */
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .info-block { background: var(--white); border-radius: 8px; padding: 28px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .info-block h4 { font-family: Arial, sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-family: Arial, sans-serif; font-size: 13.5px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .label { color: var(--muted); }
+  .info-row .value { font-weight: 600; color: var(--text); text-align: right; max-width: 60%; }
+
+  /* Value Chain */
+  .value-chain { display: flex; align-items: stretch; gap: 0; margin: 32px 0; }
+  .vc-step { flex: 1; background: var(--primary); color: white; padding: 20px 16px; text-align: center; position: relative; font-family: Arial, sans-serif; }
+  .vc-step:nth-child(2) { background: #005BB0; }
+  .vc-step:nth-child(3) { background: #006CC5; }
+  .vc-step:nth-child(4) { background: #1A7FD4; }
+  .vc-step:nth-child(5) { background: #3490E0; }
+  .vc-step::after { content: ''; position: absolute; right: -14px; top: 0; width: 0; height: 0; border-top: 35px solid transparent; border-bottom: 35px solid transparent; border-left: 14px solid currentColor; z-index: 1; }
+  .vc-step:nth-child(1)::after { border-left-color: var(--primary); }
+  .vc-step:nth-child(2)::after { border-left-color: #005BB0; }
+  .vc-step:nth-child(3)::after { border-left-color: #006CC5; }
+  .vc-step:nth-child(4)::after { border-left-color: #1A7FD4; }
+  .vc-step:last-child::after { display: none; }
+  .vc-step h5 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .vc-step p { font-size: 11px; opacity: 0.85; line-height: 1.4; }
+
+  /* Charts */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+  .chart-card { background: var(--white); border-radius: 8px; padding: 28px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .chart-card h4 { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .chart-card .chart-sub { font-family: Arial, sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+  .chart-full { background: var(--white); border-radius: 8px; padding: 28px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); margin-bottom: 32px; }
+  .chart-full h4 { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .chart-full .chart-sub { font-family: Arial, sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+
+  /* Competitor Cards */
+  .competitor-card { background: var(--white); border-radius: 10px; padding: 36px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); margin-bottom: 28px; border-top: 4px solid var(--primary); }
+  .competitor-card.c2 { border-top-color: var(--accent); }
+  .competitor-card.c3 { border-top-color: #7C3AED; }
+  .competitor-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .competitor-name { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .competitor-ticker { font-family: Arial, sans-serif; font-size: 12px; color: var(--muted); }
+  .competitor-badge { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 14px; font-family: Arial, sans-serif; font-size: 12px; color: var(--muted); }
+  .competitor-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .comp-metric { background: var(--bg); border-radius: 6px; padding: 16px; }
+  .comp-metric .m-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .comp-metric .m-value { font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: var(--text); }
+  .comp-strengths { margin-top: 20px; }
+  .comp-strengths h5 { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { font-family: Arial, sans-serif; font-size: 12px; padding: 4px 12px; border-radius: 4px; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; }
+  .tag.green { background: #ECFDF5; color: #065F46; border-color: #A7F3D0; }
+  .tag.orange { background: #FFFBEB; color: #92400E; border-color: #FCD34D; }
+  .tag.red { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }
+
+  /* Benchmarking table */
+  .bench-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.06); margin-bottom: 32px; }
+  .bench-table thead { background: var(--primary); color: white; }
+  .bench-table th { padding: 14px 16px; text-align: center; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
+  .bench-table th:first-child { text-align: left; }
+  .bench-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); text-align: center; }
+  .bench-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+  .bench-table tr:nth-child(even) td { background: #FAFAFA; }
+  .bench-table tr:last-child td { border-bottom: none; }
+  .best { color: var(--green); font-weight: 700; }
+  .worst { color: var(--red); }
+
+  /* Gap Table */
+  .gap-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .gap-table thead { background: var(--primary); color: white; }
+  .gap-table th { padding: 14px 16px; text-align: left; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
+  .gap-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .gap-table tr:last-child td { border-bottom: none; }
+  .gap-table tr:nth-child(even) td { background: #FAFAFA; }
+  .severity { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .severity.high { background: #FEE2E2; color: #991B1B; }
+  .severity.medium { background: #FEF3C7; color: #92400E; }
+  .severity.low { background: #D1FAE5; color: #065F46; }
+
+  /* Recommendations */
+  .reco-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .reco-column h4 { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 16px; border-radius: 4px; margin-bottom: 16px; }
+  .reco-column.quick h4 { background: #D1FAE5; color: #065F46; }
+  .reco-column.mid h4 { background: #FEF3C7; color: #92400E; }
+  .reco-column.strategic h4 { background: #EEF2FF; color: #3730A3; }
+  .reco-item { background: var(--white); border-radius: 6px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); border-left: 3px solid var(--border); font-family: Arial, sans-serif; }
+  .reco-column.quick .reco-item { border-left-color: var(--green); }
+  .reco-column.mid .reco-item { border-left-color: var(--orange); }
+  .reco-column.strategic .reco-item { border-left-color: var(--primary); }
+  .reco-num { font-size: 10px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .reco-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .reco-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .reco-impact { display: inline-block; margin-top: 8px; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+  .impact-high { background: #FEE2E2; color: #991B1B; }
+  .impact-med { background: #FEF3C7; color: #92400E; }
+
+  /* Maturity */
+  .radar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .maturity-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12.5px; }
+  .maturity-table th { padding: 10px 12px; background: var(--primary); color: white; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; text-align: left; }
+  .maturity-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .maturity-table tr:last-child td { border-bottom: none; }
+  .score-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .score-fill { height: 100%; border-radius: 4px; }
+
+  /* Misc */
+  .page-break { page-break-before: always; }
+  h2.section-title-alt { font-size: 18px; font-weight: 700; color: var(--primary); font-family: Arial, sans-serif; margin: 24px 0 12px; }
+  p.body-text { font-size: 15px; color: #374151; line-height: 1.8; margin-bottom: 16px; }
+  .callout { background: #EFF6FF; border-left: 4px solid var(--primary); border-radius: 4px; padding: 16px 20px; margin: 24px 0; font-family: Arial, sans-serif; font-size: 14px; color: var(--primary); }
+
+  /* Brand pills */
+  .brand-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .brand-pill { background: var(--primary); color: white; font-family: Arial, sans-serif; font-size: 12px; padding: 5px 14px; border-radius: 20px; font-weight: 600; }
+  .brand-pill.red { background: var(--accent); }
+  .brand-pill.light { background: #E0EEFF; color: var(--primary); }
+
+  /* Footer */
+  .report-footer { background: var(--mid); color: rgba(255,255,255,0.5); padding: 32px 60px; font-family: Arial, sans-serif; font-size: 11px; display: flex; justify-content: space-between; align-items: center; margin-top: 80px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">AutomationX · Competitive Intelligence</div>
+  <div>
+    <div class="cover-badge">Confidential — Strategic Report</div>
+    <h1>PepsiCo<br><span>Competitive Audit</span></h1>
+    <div class="subtitle">Supply Chain &amp; Competitive Intelligence Analysis · Food &amp; Beverages Sector</div>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>Target Company</label><span>PepsiCo, Inc.</span></div>
+      <div class="cover-meta-item"><label>Industry</label><span>Food &amp; Beverages</span></div>
+      <div class="cover-meta-item"><label>Report Date</label><span>April 7, 2026</span></div>
+      <div class="cover-meta-item"><label>Benchmarked Against</label><span>3 Peers</span></div>
+    </div>
+  </div>
+  <div class="cover-footer">Prepared by AutomationX · For Executive Use Only · PepsiCo Competitive Intelligence Audit 2026</div>
+</div>
+
+<!-- MAIN -->
+<div class="page">
+
+  <!-- SECTION 01: EXECUTIVE SUMMARY -->
+  <div class="section">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Executive Summary</div>
+    <div class="section-subtitle">Strategic overview, key risks, and high-priority opportunities for PepsiCo's leadership team</div>
+    <div class="section-divider"></div>
+
+    <div class="exec-grid">
+      <div class="exec-card">
+        <h4>Key Insights</h4>
+        <ul>
+          <li>Revenue grew 2.25% YoY to $93.9B in 2025 — largest F&B company by revenue in peer group</li>
+          <li>EBITDA declined 6.8% to $14.9B; operating profit fell from $12.9B to $11.5B</li>
+          <li>Frito-Lay controls &gt;60% of U.S. salty snacks — unmatched category dominance</li>
+          <li>Gatorade commands 65–70% of U.S. sports drinks market</li>
+          <li>"One North America" supply chain integration pilot underway in Texas</li>
+        </ul>
+      </div>
+      <div class="exec-card accent">
+        <h4>Strategic Risks</h4>
+        <ul>
+          <li>EBITDA margin compression amid rising input costs and consumer trade-down</li>
+          <li>Coca-Cola's gross margin (61.6%) is 7.5pts higher — structural cost gap</li>
+          <li>Dual DSD network (snacks + beverages) creates operational complexity</li>
+          <li>Consumer health trends threatening CSD &amp; salty snack volumes long-term</li>
+          <li>SKU proliferation leading to manufacturing inefficiency — 20% SKU cull underway</li>
+        </ul>
+      </div>
+      <div class="exec-card green">
+        <h4>Growth Opportunities</h4>
+        <ul>
+          <li>"One North America" integration could unlock $500M–$1B in cost savings</li>
+          <li>SAP Frito-Lay rollout improves demand sensing &amp; inventory optimization</li>
+          <li>International expansion: Asia Pacific and Latin America underpenetrated</li>
+          <li>Better-for-you portfolio (Quaker, Gatorade Zero) aligns with health megatrend</li>
+          <li>Pricing power: 2–4% organic revenue growth targeted for 2026</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">$93.9B</div>
+        <div class="kpi-label">2025 Revenue (USD)</div>
+        <div class="kpi-delta pos">▲ 2.25% YoY</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value orange">$14.9B</div>
+        <div class="kpi-label">2025 EBITDA (USD)</div>
+        <div class="kpi-delta neg">▼ 6.8% YoY</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">54.1%</div>
+        <div class="kpi-label">Gross Margin</div>
+        <div class="kpi-delta neg">▼ vs. KO 61.6%</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value green">$7.7B</div>
+        <div class="kpi-label">Free Cash Flow</div>
+        <div class="kpi-delta pos">Strong FCF generation</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">8.8%</div>
+        <div class="kpi-label">Net Profit Margin</div>
+        <div class="kpi-delta">Net income $8.2B</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 02: COMPANY OVERVIEW -->
+  <div class="section">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Target Company Overview</div>
+    <div class="section-subtitle">PepsiCo, Inc. — Global food, snack and beverage leader with a uniquely integrated portfolio</div>
+    <div class="section-divider"></div>
+
+    <p class="body-text">PepsiCo is one of the world's largest food and beverage companies, operating across more than 200 countries and territories. Unlike pure-play beverage companies, PepsiCo's defining competitive advantage is its dual-business model — a market-leading snack business (Frito-Lay) combined with a global beverage portfolio — giving it unparalleled retailer shelf space, distribution density, and cross-category consumer reach. The company operates seven reportable segments: Frito-Lay North America (FLNA), Quaker Foods North America, PepsiCo Beverages North America (PBNA), Latin America, Europe, Africa/Middle East/South Asia (AMESA), and Asia Pacific/Australia/NZ/China (APAC).</p>
+
+    <div class="brand-pills">
+      <span class="brand-pill">Pepsi</span><span class="brand-pill">Mountain Dew</span><span class="brand-pill red">Gatorade</span>
+      <span class="brand-pill red">Doritos</span><span class="brand-pill red">Lay's</span><span class="brand-pill red">Cheetos</span>
+      <span class="brand-pill">Quaker</span><span class="brand-pill light">Aquafina</span><span class="brand-pill light">Tropicana</span>
+      <span class="brand-pill light">Bubly</span><span class="brand-pill light">Lipton (JV)</span><span class="brand-pill light">Rockstar</span>
+    </div>
+
+    <div class="overview-grid">
+      <div class="info-block">
+        <h4>Business Profile</h4>
+        <div class="info-row"><span class="label">Business Model</span><span class="value">Integrated B2C + B2B (DSD + Warehouse)</span></div>
+        <div class="info-row"><span class="label">Headquarters</span><span class="value">Purchase, New York, USA</span></div>
+        <div class="info-row"><span class="label">Stock Exchange</span><span class="value">NASDAQ: PEP</span></div>
+        <div class="info-row"><span class="label">Market Cap (Apr 2026)</span><span class="value">~$175B USD</span></div>
+        <div class="info-row"><span class="label">Employees</span><span class="value">~318,000</span></div>
+        <div class="info-row"><span class="label">Countries of Operation</span><span class="value">200+</span></div>
+        <div class="info-row"><span class="label">CEO</span><span class="value">Ramon Laguarta</span></div>
+      </div>
+      <div class="info-block">
+        <h4>Revenue by Segment (2025 est.)</h4>
+        <div class="info-row"><span class="label">Frito-Lay North America</span><span class="value">~$24B (~26%)</span></div>
+        <div class="info-row"><span class="label">PepsiCo Beverages NA</span><span class="value">~$25B (~27%)</span></div>
+        <div class="info-row"><span class="label">Latin America</span><span class="value">~$10B (~11%)</span></div>
+        <div class="info-row"><span class="label">Europe</span><span class="value">~$14B (~15%)</span></div>
+        <div class="info-row"><span class="label">AMESA</span><span class="value">~$8B (~9%)</span></div>
+        <div class="info-row"><span class="label">APAC</span><span class="value">~$5B (~5%)</span></div>
+        <div class="info-row"><span class="label">Quaker Foods NA</span><span class="value">~$3B (~3%)</span></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Value Proposition:</strong> PepsiCo's "Power of One" strategy — delivering both snacks and beverages through a shared DSD network — gives it unrivalled bargaining power with retailers, the highest route density in North America, and the ability to cross-sell at point of distribution. This integrated model is structurally difficult for pure-play competitors to replicate.
+    </div>
+  </div>
+
+  <!-- SECTION 03: INDUSTRY & VALUE CHAIN -->
+  <div class="section">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Industry Overview &amp; Value Chain</div>
+    <div class="section-subtitle">Global food &amp; beverage landscape, mega-trends, and PepsiCo's end-to-end supply chain mapping</div>
+    <div class="section-divider"></div>
+
+    <p class="body-text">The global food and beverage industry is a ~$8 trillion market. Packaged food &amp; beverage (PepsiCo's core) is ~$2.5 trillion annually. The sector is characterized by intense brand competition, rising private-label pressure, commodity cost volatility (corn, potatoes, PET resin, aluminum), and an accelerating shift toward healthier, functional, and sustainable products. Digital commerce, direct-to-consumer channels, and AI-powered demand sensing are reshaping how F&amp;B companies plan and execute their supply chains.</p>
+
+    <h2 class="section-title-alt">PepsiCo Supply Chain Value Chain (Plan → Source → Make → Deliver → Return)</h2>
+    <div class="value-chain">
+      <div class="vc-step">
+        <h5>Plan</h5>
+        <p>S&amp;OP, demand sensing (SAP), production scheduling across 290+ manufacturing plants</p>
+      </div>
+      <div class="vc-step">
+        <h5>Source</h5>
+        <p>Agricultural inputs (corn, potatoes, oats), packaging (PET, aluminum, film), flavors &amp; oils</p>
+      </div>
+      <div class="vc-step">
+        <h5>Make</h5>
+        <p>290+ plants globally; Frito-Lay highly automated; beverage concentrate + bottling (owned + franchise)</p>
+      </div>
+      <div class="vc-step">
+        <h5>Deliver</h5>
+        <p>Dual DSD (snack + beverage), warehouse delivery, foodservice, e-commerce, 200+ countries</p>
+      </div>
+      <div class="vc-step">
+        <h5>Recycle / Return</h5>
+        <p>Packaging sustainability (pep+ goals), potato skin composting, water recycling, supplier ESG programs</p>
+      </div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="info-block">
+        <h4>Key Industry Trends</h4>
+        <div class="info-row"><span class="label">Health &amp; Wellness</span><span class="value">Demand shift to better-for-you products</span></div>
+        <div class="info-row"><span class="label">Premiumization</span><span class="value">Consumers paying up for quality/functional</span></div>
+        <div class="info-row"><span class="label">E-Commerce</span><span class="value">Online grocery doubling every 3–4 years</span></div>
+        <div class="info-row"><span class="label">Private Label Growth</span><span class="value">Eroding share in commoditized categories</span></div>
+        <div class="info-row"><span class="label">AI &amp; Automation</span><span class="value">Demand forecasting, warehouse automation</span></div>
+        <div class="info-row"><span class="label">Sustainability</span><span class="value">Net-zero commitments, packaging targets</span></div>
+      </div>
+      <div class="info-block">
+        <h4>Margin Pool Distribution</h4>
+        <div class="info-row"><span class="label">Frito-Lay (Snacks)</span><span class="value">Highest margin segment (~28–30% OP margin)</span></div>
+        <div class="info-row"><span class="label">Beverages NA</span><span class="value">Mid-tier margin (~12–15% OP margin)</span></div>
+        <div class="info-row"><span class="label">International Segments</span><span class="value">Lower but growing (~10–12% OP margin)</span></div>
+        <div class="info-row"><span class="label">Quaker Foods</span><span class="value">Under pressure from recall headwinds</span></div>
+        <div class="info-row"><span class="label">Bottleneck</span><span class="value">Dual DSD cost structure vs. Coca-Cola asset-light model</span></div>
+        <div class="info-row"><span class="label">Biggest Opportunity</span><span class="value">"One NA" integration — shared warehousing/routes</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 04: FINANCIAL ANALYSIS -->
+  <div class="section page-break">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Financial Analysis — PepsiCo</div>
+    <div class="section-subtitle">Revenue, margin, working capital, and operational efficiency metrics (2022–2025)</div>
+    <div class="section-divider"></div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>Revenue vs. COGS (2022–2025)</h4>
+        <div class="chart-sub">USD Billions · PepsiCo Inc.</div>
+        <canvas id="revCOGS" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>EBITDA &amp; Gross Margin Trend</h4>
+        <div class="chart-sub">USD Billions · EBITDA Bar | Gross Margin % Line</div>
+        <canvas id="ebitdaMargin" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-full">
+      <h4>Working Capital Metrics — Trend (Estimated)</h4>
+      <div class="chart-sub">DSO · DIO · DPO in Days — PepsiCo 2022–2025</div>
+      <canvas id="workingCapital" height="130"></canvas>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">~38</div>
+        <div class="kpi-label">DSO (Days)</div>
+        <div class="kpi-delta">Receivables efficiency</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value orange">~36</div>
+        <div class="kpi-label">DIO (Days)</div>
+        <div class="kpi-delta neg">Higher than peers</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value green">~55</div>
+        <div class="kpi-label">DPO (Days)</div>
+        <div class="kpi-delta pos">Favorable payables</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value">~19</div>
+        <div class="kpi-label">C2C Cycle (Days)</div>
+        <div class="kpi-delta neg">Room for improvement</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">~10x</div>
+        <div class="kpi-label">Inventory Turns</div>
+        <div class="kpi-delta">Packaged F&amp;B benchmark</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 05: COMPETITOR DEEP DIVE -->
+  <div class="section">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Competitor Deep Dive</div>
+    <div class="section-subtitle">Top 3 direct competitors in global food &amp; beverage — Coca-Cola, Nestlé, Kraft Heinz</div>
+    <div class="section-divider"></div>
+
+    <!-- Coca-Cola -->
+    <div class="competitor-card">
+      <div class="competitor-header">
+        <div>
+          <div class="competitor-name">The Coca-Cola Company</div>
+          <div class="competitor-ticker">NYSE: KO · Headquarters: Atlanta, Georgia, USA</div>
+        </div>
+        <div class="competitor-badge">Competitor #1</div>
+      </div>
+      <div class="competitor-grid">
+        <div class="comp-metric"><div class="m-label">2025 Revenue</div><div class="m-value">$47.9B USD</div></div>
+        <div class="comp-metric"><div class="m-label">2025 EBITDA</div><div class="m-value">$14.8B USD</div></div>
+        <div class="comp-metric"><div class="m-label">Gross Margin</div><div class="m-value">61.6%</div></div>
+        <div class="comp-metric"><div class="m-label">Operating Margin</div><div class="m-value">28.7%</div></div>
+        <div class="comp-metric"><div class="m-label">EBITDA Growth YoY</div><div class="m-value">+33.8%</div></div>
+        <div class="comp-metric"><div class="m-label">EPS Growth YoY</div><div class="m-value">+23%</div></div>
+      </div>
+      <div class="comp-strengths">
+        <h5>Key Strengths &amp; Differentiators</h5>
+        <div class="tag-row">
+          <span class="tag green">61.6% Gross Margin — 7.5pts vs. PepsiCo</span>
+          <span class="tag green">Asset-Light Franchise Bottler Model</span>
+          <span class="tag">45%+ Global CSD Market Share</span>
+          <span class="tag">Brand Portfolio: 200+ Brands in 200+ Countries</span>
+          <span class="tag orange">No Significant Snack Business</span>
+          <span class="tag">EBITDA Surging +33.8% YoY</span>
+        </div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#6B7280;margin-top:16px;line-height:1.6;">Coca-Cola is PepsiCo's most direct and formidable competitor in beverages. Its asset-light franchise bottling model structurally delivers superior gross margins (61.6% vs. PepsiCo's 54.1%) because Coca-Cola manufactures concentrate and licenses production to franchise bottlers — offloading manufacturing capex and inventory risk. This is PepsiCo's most significant structural disadvantage. However, PepsiCo's snack business (which Coca-Cola completely lacks) provides revenue diversification and higher DSD route utilization.</p>
+    </div>
+
+    <!-- Nestle -->
+    <div class="competitor-card c2">
+      <div class="competitor-header">
+        <div>
+          <div class="competitor-name">Nestlé S.A.</div>
+          <div class="competitor-ticker">SIX: NESN · Headquarters: Vevey, Switzerland</div>
+        </div>
+        <div class="competitor-badge">Competitor #2</div>
+      </div>
+      <div class="competitor-grid">
+        <div class="comp-metric"><div class="m-label">2025 Revenue</div><div class="m-value">$108.5B USD</div></div>
+        <div class="comp-metric"><div class="m-label">UTOP Margin</div><div class="m-value">16.1%</div></div>
+        <div class="comp-metric"><div class="m-label">Free Cash Flow</div><div class="m-value">CHF 9.2B</div></div>
+        <div class="comp-metric"><div class="m-label">Net Debt / EBITDA</div><div class="m-value">2.85x</div></div>
+        <div class="comp-metric"><div class="m-label">Fuel for Growth Savings (by 2027)</div><div class="m-value">CHF 2.5B</div></div>
+        <div class="comp-metric"><div class="m-label">Revenue Growth YoY</div><div class="m-value">+4.13%</div></div>
+      </div>
+      <div class="comp-strengths">
+        <h5>Key Strengths &amp; Differentiators</h5>
+        <div class="tag-row">
+          <span class="tag green">World's Largest F&B Company by Revenue ($108.5B)</span>
+          <span class="tag green">Purina, Nescafé, Maggi — Category-leading brands</span>
+          <span class="tag">Massive Global Distribution &amp; Cold Chain</span>
+          <span class="tag">Pet Care (Purina) — High growth, high margin</span>
+          <span class="tag orange">2.85x Net Debt/EBITDA — Higher leverage</span>
+          <span class="tag orange">Slower organic growth vs. peers</span>
+        </div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#6B7280;margin-top:16px;line-height:1.6;">Nestlé competes with PepsiCo across several F&B categories but is more diversified into pet care (Purina), coffee (Nescafé, Nespresso), infant nutrition, and healthcare nutrition — areas where PepsiCo has no presence. Nestlé's "Fuel for Growth" program targeting CHF 2.5B in cost savings by 2027 signals a direct operational efficiency play that will sharpen its competitive edge in overlapping categories. Its sheer scale ($108.5B revenue) dwarfs PepsiCo's, but its profitability is lower on an operating margin basis.</p>
+    </div>
+
+    <!-- Kraft Heinz -->
+    <div class="competitor-card c3">
+      <div class="competitor-header">
+        <div>
+          <div class="competitor-name">The Kraft Heinz Company</div>
+          <div class="competitor-ticker">NASDAQ: KHC · Headquarters: Chicago, Illinois, USA</div>
+        </div>
+        <div class="competitor-badge">Competitor #3</div>
+      </div>
+      <div class="competitor-grid">
+        <div class="comp-metric"><div class="m-label">2025 Revenue</div><div class="m-value">$24.9B USD</div></div>
+        <div class="comp-metric"><div class="m-label">Adj. Operating Income</div><div class="m-value">$4.7B USD</div></div>
+        <div class="comp-metric"><div class="m-label">Gross Margin</div><div class="m-value">33.3%</div></div>
+        <div class="comp-metric"><div class="m-label">Free Cash Flow</div><div class="m-value">$3.7B USD</div></div>
+        <div class="comp-metric"><div class="m-label">Organic Rev. Growth</div><div class="m-value">-3.4%</div></div>
+        <div class="comp-metric"><div class="m-label">Impairment Charges</div><div class="m-value">$9.3B (2025)</div></div>
+      </div>
+      <div class="comp-strengths">
+        <h5>Key Strengths &amp; Differentiators</h5>
+        <div class="tag-row">
+          <span class="tag green">Strong Free Cash Flow ($3.7B, +15.9%)</span>
+          <span class="tag">Iconic Brands: Kraft, Heinz, Oscar Mayer</span>
+          <span class="tag orange">Revenue Declining 3.5% YoY</span>
+          <span class="tag red">$9.3B Impairment Charges — Brand Erosion</span>
+          <span class="tag red">Lowest Gross Margin at 33.3%</span>
+          <span class="tag orange">Organic Sales Down 3.4%</span>
+        </div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#6B7280;margin-top:16px;line-height:1.6;">Kraft Heinz competes with PepsiCo primarily in the packaged food aisle — condiments, cheese, meats, and cereals. Its 2025 results are a cautionary tale: $9.3B in impairment charges signal deep brand equity erosion, and organic revenue is declining 3.4%. While its FCF remains strong ($3.7B, +15.9%), the structural business is weakening. For PepsiCo, Kraft Heinz represents a competitive validation that brand investment, innovation, and health-aligned portfolio transformation are non-negotiable — not optional — for long-term category leadership.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 06: PEER BENCHMARKING -->
+  <div class="section page-break">
+    <div class="section-label">Section 06</div>
+    <div class="section-title">Peer Benchmarking Dashboard</div>
+    <div class="section-subtitle">Side-by-side financial and supply chain comparison across all four companies</div>
+    <div class="section-divider"></div>
+
+    <table class="bench-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>PepsiCo (PEP)</th>
+          <th>Coca-Cola (KO)</th>
+          <th>Nestlé (NESN)</th>
+          <th>Kraft Heinz (KHC)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025 Revenue (USD)</td>
+          <td>$93.9B</td>
+          <td>$47.9B</td>
+          <td class="best">$108.5B</td>
+          <td class="worst">$24.9B</td>
+        </tr>
+        <tr>
+          <td>EBITDA (USD, est.)</td>
+          <td>$14.9B</td>
+          <td class="best">$14.8B</td>
+          <td>$17.5B</td>
+          <td class="worst">$5.5B (adj.)</td>
+        </tr>
+        <tr>
+          <td>Gross Margin %</td>
+          <td>54.1%</td>
+          <td class="best">61.6%</td>
+          <td>~47%</td>
+          <td class="worst">33.3%</td>
+        </tr>
+        <tr>
+          <td>Operating Margin %</td>
+          <td>12.2%</td>
+          <td class="best">28.7%</td>
+          <td>16.1%</td>
+          <td class="worst">-18.8% (reported)</td>
+        </tr>
+        <tr>
+          <td>Free Cash Flow</td>
+          <td>$7.7B</td>
+          <td class="best">~$9.5B</td>
+          <td>CHF 9.2B</td>
+          <td>$3.7B</td>
+        </tr>
+        <tr>
+          <td>Revenue Growth YoY</td>
+          <td class="best">+2.25%</td>
+          <td>+2.0%</td>
+          <td>+4.13%</td>
+          <td class="worst">-3.5%</td>
+        </tr>
+        <tr>
+          <td>Supply Chain Model</td>
+          <td>Owned DSD (Dual)</td>
+          <td class="best">Asset-Light Franchise</td>
+          <td>Hybrid (Owned + Co-man)</td>
+          <td>Warehouse Delivery</td>
+        </tr>
+        <tr>
+          <td>DSO (Days, est.)</td>
+          <td>~38</td>
+          <td class="best">~28</td>
+          <td>~42</td>
+          <td>~35</td>
+        </tr>
+        <tr>
+          <td>DIO (Days, est.)</td>
+          <td>~36</td>
+          <td class="best">~22</td>
+          <td>~55</td>
+          <td>~40</td>
+        </tr>
+        <tr>
+          <td>DPO (Days, est.)</td>
+          <td>~55</td>
+          <td>~50</td>
+          <td class="best">~65</td>
+          <td>~52</td>
+        </tr>
+        <tr>
+          <td>C2C Cycle (Days)</td>
+          <td>~19</td>
+          <td class="best">~0</td>
+          <td>~32</td>
+          <td>~23</td>
+        </tr>
+        <tr>
+          <td>Snack Category Presence</td>
+          <td class="best">Yes (&gt;60% US share)</td>
+          <td class="worst">No</td>
+          <td>Limited</td>
+          <td>Limited</td>
+        </tr>
+        <tr>
+          <td>Beverage Category Presence</td>
+          <td>Yes (29–30% US CSD)</td>
+          <td class="best">Yes (45%+ CSD)</td>
+          <td>Limited (water, coffee)</td>
+          <td class="worst">No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>Revenue Comparison (2025, USD Billions)</h4>
+        <div class="chart-sub">All four companies — full year 2025</div>
+        <canvas id="revBar" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Gross Margin % Comparison</h4>
+        <div class="chart-sub">2025 Gross Margin % across peer group</div>
+        <canvas id="marginBar" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>Cash-to-Cash Cycle (Days)</h4>
+        <div class="chart-sub">Lower / negative = better working capital efficiency</div>
+        <canvas id="c2cBar" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>EBITDA Comparison (2025, USD Billions)</h4>
+        <div class="chart-sub">Estimated EBITDA across peer group</div>
+        <canvas id="ebitdaBar" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 07: SUPPLY CHAIN MATURITY -->
+  <div class="section">
+    <div class="section-label">Section 07</div>
+    <div class="section-title">Supply Chain Capability Maturity</div>
+    <div class="section-subtitle">Score 1–10 across eight supply chain dimensions vs. top competitors</div>
+    <div class="section-divider"></div>
+
+    <div class="radar-grid">
+      <div>
+        <canvas id="radarChart" height="320"></canvas>
+      </div>
+      <table class="maturity-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>PepsiCo</th>
+            <th>Coca-Cola</th>
+            <th>Nestlé</th>
+            <th>Kraft Heinz</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Demand Planning &amp; Forecasting</td>
+            <td>7<div class="score-bar"><div class="score-fill" style="width:70%;background:#004B93"></div></div></td>
+            <td>8</td><td>8</td><td>6</td>
+          </tr>
+          <tr>
+            <td>Inventory Optimization</td>
+            <td>6<div class="score-bar"><div class="score-fill" style="width:60%;background:#E8A020"></div></div></td>
+            <td>9</td><td>6</td><td>6</td>
+          </tr>
+          <tr>
+            <td>Supplier Collaboration</td>
+            <td>8<div class="score-bar"><div class="score-fill" style="width:80%;background:#004B93"></div></div></td>
+            <td>7</td><td>9</td><td>7</td>
+          </tr>
+          <tr>
+            <td>Manufacturing Flexibility</td>
+            <td>8<div class="score-bar"><div class="score-fill" style="width:80%;background:#004B93"></div></div></td>
+            <td>6</td><td>8</td><td>6</td>
+          </tr>
+          <tr>
+            <td>Logistics &amp; Network</td>
+            <td>9<div class="score-bar"><div class="score-fill" style="width:90%;background:#004B93"></div></div></td>
+            <td>8</td><td>8</td><td>6</td>
+          </tr>
+          <tr>
+            <td>Digital SC (AI / Control Tower)</td>
+            <td>7<div class="score-bar"><div class="score-fill" style="width:70%;background:#004B93"></div></div></td>
+            <td>9</td><td>7</td><td>6</td>
+          </tr>
+          <tr>
+            <td>Resilience &amp; Risk Mgmt</td>
+            <td>8<div class="score-bar"><div class="score-fill" style="width:80%;background:#004B93"></div></div></td>
+            <td>8</td><td>8</td><td>5</td>
+          </tr>
+          <tr>
+            <td>Customer Fulfillment</td>
+            <td>9<div class="score-bar"><div class="score-fill" style="width:90%;background:#004B93"></div></div></td>
+            <td>8</td><td>7</td><td>7</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 08: GAP ANALYSIS -->
+  <div class="section page-break">
+    <div class="section-label">Section 08</div>
+    <div class="section-title">Gap Analysis</div>
+    <div class="section-subtitle">Structured capability and operational gaps vs. best-in-class peer benchmarks</div>
+    <div class="section-divider"></div>
+
+    <table class="gap-table">
+      <thead>
+        <tr>
+          <th>Capability / Area</th>
+          <th>PepsiCo Current State</th>
+          <th>Best-in-Class (Peer)</th>
+          <th>Gap Description</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Gross Margin</strong></td>
+          <td>54.1%</td>
+          <td>Coca-Cola 61.6%</td>
+          <td>7.5pt structural gap driven by owned DSD vs. asset-light franchise model</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Operating Margin</strong></td>
+          <td>12.2%</td>
+          <td>Coca-Cola 28.7%</td>
+          <td>16.5pt gap — Coke's concentrate model eliminates manufacturing overhead</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Inventory Optimization (DIO)</strong></td>
+          <td>~36 days DIO</td>
+          <td>Coca-Cola ~22 days</td>
+          <td>14-day excess — dual DSD inventory buffers inflating working capital</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Digital Supply Chain / AI</strong></td>
+          <td>Score 7/10 — SAP Frito-Lay just launched</td>
+          <td>Coca-Cola 9/10 — Advanced AI-driven demand orchestration</td>
+          <td>2-point maturity gap in AI-driven demand sensing and control tower</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>DSO (Receivables)</strong></td>
+          <td>~38 days</td>
+          <td>Coca-Cola ~28 days</td>
+          <td>10-day gap — franchise model gives Coca-Cola faster cash collection</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cash-to-Cash Cycle</strong></td>
+          <td>~19 days C2C</td>
+          <td>Coca-Cola ~0 days</td>
+          <td>19-day disadvantage — asset-light model nearly eliminates C2C exposure</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>SKU Complexity</strong></td>
+          <td>~1,200+ active SKUs (pre-cull)</td>
+          <td>Coca-Cola — Leaner portfolio discipline</td>
+          <td>Excess SKUs inflate mfg. changeovers, inventory, and forecast error</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Supplier Payment Terms (DPO)</strong></td>
+          <td>~55 days DPO</td>
+          <td>Nestlé ~65 days</td>
+          <td>10-day gap — opportunity to extend terms with strategic suppliers</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Dual DSD Cost Structure</strong></td>
+          <td>Separate snack + beverage routes</td>
+          <td>"One NA" pilot underway</td>
+          <td>Redundant route density increases cost-to-serve per case</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>International Market Penetration</strong></td>
+          <td>APAC &amp; AMESA ~14% of revenue</td>
+          <td>Nestlé — Truly global at scale</td>
+          <td>Asia Pacific and emerging markets underpenetrated vs. Nestlé's footprint</td>
+          <td><span class="severity low">Low</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 09: RECOMMENDATIONS -->
+  <div class="section">
+    <div class="section-label">Section 09</div>
+    <div class="section-title">Strategic Recommendations</div>
+    <div class="section-subtitle">Top 10 prioritized initiatives — ranked by impact vs. effort, for CSCO / COO / CXO audience</div>
+    <div class="section-divider"></div>
+
+    <div class="reco-grid">
+      <div class="reco-column quick">
+        <h4>Quick Wins (0–30 Days)</h4>
+        <div class="reco-item">
+          <div class="reco-num">Rec #1</div>
+          <div class="reco-title">Accelerate 20% SKU Cull Program</div>
+          <div class="reco-desc">Finalize the rationalization of ~240 underperforming SKUs across Frito-Lay and beverages. Reduces changeovers, lowers forecast error by ~15%, and frees $300–500M in inventory working capital.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #2</div>
+          <div class="reco-title">Extend Supplier Payment Terms (DPO +10 Days)</div>
+          <div class="reco-desc">Renegotiate payment terms from ~55 to ~65 days with top 200 strategic suppliers — matching Nestlé's benchmark. At PepsiCo's ~$43B COGS, each 10 days DPO extension = ~$1.2B in freed cash.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #3</div>
+          <div class="reco-title">AR Automation to Reduce DSO</div>
+          <div class="reco-desc">Deploy e-invoicing and dynamic discounting tools for top 500 retail customers. Targeting DSO reduction from ~38 to ~30 days releases ~$2.0B in receivables at PepsiCo's revenue scale.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+      </div>
+      <div class="reco-column mid">
+        <h4>Mid-Term (3–6 Months)</h4>
+        <div class="reco-item">
+          <div class="reco-num">Rec #4</div>
+          <div class="reco-title">Scale "One North America" DSD Integration</div>
+          <div class="reco-desc">Accelerate the Texas pilot into a national rollout of combined snack + beverage distribution. Combining 2 DSD networks into 1 could reduce last-mile cost by 15–20%, worth $500M–$1B annually.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #5</div>
+          <div class="reco-title">AI-Powered Demand Sensing Deployment</div>
+          <div class="reco-desc">Leverage the newly deployed Frito-Lay SAP platform to integrate ML demand sensing. Target forecast accuracy improvement from ~78% to ~90%, reducing safety stock by 20% and DIO from ~36 to ~28 days.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #6</div>
+          <div class="reco-title">Inventory Optimization Across Beverage Network</div>
+          <div class="reco-desc">Apply Frito-Lay's inventory management learnings to the beverage segment. PBNA carries disproportionate finished goods buffers. Target: DIO reduction from ~36 to ~28 days, freeing ~$1.5B in working capital.</div>
+          <span class="reco-impact impact-med">Medium Impact</span>
+        </div>
+      </div>
+      <div class="reco-column strategic">
+        <h4>Strategic Bets (6–18 Months)</h4>
+        <div class="reco-item">
+          <div class="reco-num">Rec #7</div>
+          <div class="reco-title">Build Integrated Supply Chain Control Tower</div>
+          <div class="reco-desc">Unify visibility across 290+ manufacturing plants, DSD routes, and retail execution into a real-time control tower. Closes 2-point digital maturity gap vs. Coca-Cola's best-in-class AI supply chain.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #8</div>
+          <div class="reco-title">Accelerate "Better-For-You" Portfolio Transformation</div>
+          <div class="reco-desc">Aggressively invest in Gatorade Zero, Quaker, Bubly, and functional snack innovation. BFY is the fastest-growing shelf segment. Directly counters the health-trend risk threatening CSD and traditional salty snack volumes.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #9</div>
+          <div class="reco-title">Dual-Source Agricultural Commodities (Corn, Potato)</div>
+          <div class="reco-desc">Implement dual-sourcing for Frito-Lay's top 5 agricultural inputs across geographically diversified supplier pools. Reduces weather/tariff disruption risk and improves negotiating leverage on ~$8B+ in raw material spend.</div>
+          <span class="reco-impact impact-med">Medium Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #10</div>
+          <div class="reco-title">APAC &amp; Emerging Market Supply Chain Buildout</div>
+          <div class="reco-desc">Invest in local manufacturing and DSD infrastructure in India, Southeast Asia, and Sub-Saharan Africa. These markets represent $5B+ in addressable revenue headroom. Nestlé's footprint shows the long-term margin potential of early-mover advantage.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="report-footer">
+  <span>© 2026 AutomationX · Competitive Intelligence Division · For Executive Use Only</span>
+  <span>PepsiCo, Inc. — Full Competitive Audit | Generated: April 7, 2026</span>
+</div>
+
+<!-- CHARTS -->
+<script>
+const C = {
+  pepsi: '#004B93', coke: '#E31837', nestle: '#7B3F00', kraft: '#7C3AED',
+  accent: '#F59E0B', green: '#10B981',
+};
+
+// Revenue vs COGS
+new Chart(document.getElementById('revCOGS'), {
+  type: 'bar',
+  data: {
+    labels: ['2022', '2023', '2024', '2025'],
+    datasets: [
+      { label: 'Revenue ($B)', data: [86.4, 91.5, 91.8, 93.9], backgroundColor: C.pepsi, borderRadius: 4 },
+      { label: 'COGS ($B)',    data: [40.6, 42.5, 42.2, 43.1], backgroundColor: C.accent, borderRadius: 4 },
+    ]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } }, scales: { y: { beginAtZero: false, min: 35, ticks: { callback: v => '$' + v + 'B' } } }, responsive: true }
+});
+
+// EBITDA & Gross Margin
+new Chart(document.getElementById('ebitdaMargin'), {
+  type: 'bar',
+  data: {
+    labels: ['2022', '2023', '2024', '2025'],
+    datasets: [
+      { type: 'bar',  label: 'EBITDA ($B)',    data: [14.4, 16.0, 16.0, 14.9], backgroundColor: C.pepsi, borderRadius: 4, yAxisID: 'y' },
+      { type: 'line', label: 'Gross Margin %', data: [53.0, 53.6, 53.1, 54.1], borderColor: C.accent, backgroundColor: 'transparent', tension: 0.4, pointRadius: 5, yAxisID: 'y1' },
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } },
+    scales: {
+      y:  { position: 'left',  ticks: { callback: v => '$' + v + 'B' } },
+      y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: v => v + '%' }, min: 50, max: 58 },
+    },
+    responsive: true
+  }
+});
+
+// Working Capital
+new Chart(document.getElementById('workingCapital'), {
+  type: 'bar',
+  data: {
+    labels: ['2022', '2023', '2024', '2025'],
+    datasets: [
+      { label: 'DSO (Days)', data: [42, 40, 39, 38], backgroundColor: C.pepsi, borderRadius: 3 },
+      { label: 'DIO (Days)', data: [42, 40, 38, 36], backgroundColor: C.accent, borderRadius: 3 },
+      { label: 'DPO (Days)', data: [50, 52, 54, 55], backgroundColor: C.green, borderRadius: 3 },
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + 'd' } } },
+    responsive: true
+  }
+});
+
+// Revenue Bar
+new Chart(document.getElementById('revBar'), {
+  type: 'bar',
+  data: {
+    labels: ['PepsiCo', 'Coca-Cola', 'Nestlé', 'Kraft Heinz'],
+    datasets: [{ label: 'Revenue 2025 ($B)', data: [93.9, 47.9, 108.5, 24.9], backgroundColor: [C.pepsi, C.coke, C.nestle, C.kraft], borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '$' + v + 'B' } } }, responsive: true }
+});
+
+// Gross Margin
+new Chart(document.getElementById('marginBar'), {
+  type: 'bar',
+  data: {
+    labels: ['PepsiCo', 'Coca-Cola', 'Nestlé', 'Kraft Heinz'],
+    datasets: [{ label: 'Gross Margin %', data: [54.1, 61.6, 47.0, 33.3], backgroundColor: [C.pepsi, C.coke, C.nestle, C.kraft], borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }, responsive: true }
+});
+
+// C2C
+new Chart(document.getElementById('c2cBar'), {
+  type: 'bar',
+  data: {
+    labels: ['PepsiCo', 'Coca-Cola', 'Nestlé', 'Kraft Heinz'],
+    datasets: [{ label: 'C2C Cycle (Days)', data: [19, 0, 32, 23], backgroundColor: [C.pepsi, C.coke, C.nestle, C.kraft], borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v + 'd' } } }, responsive: true }
+});
+
+// EBITDA Bar
+new Chart(document.getElementById('ebitdaBar'), {
+  type: 'bar',
+  data: {
+    labels: ['PepsiCo', 'Coca-Cola', 'Nestlé', 'Kraft Heinz'],
+    datasets: [{ label: 'EBITDA 2025 ($B, est.)', data: [14.9, 14.8, 17.5, 5.5], backgroundColor: [C.pepsi, C.coke, C.nestle, C.kraft], borderRadius: 4 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '$' + v + 'B' } } }, responsive: true }
+});
+
+// Radar
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Demand Planning','Inventory Optim.','Supplier Collab.','Mfg. Flexibility','Logistics & Network','Digital SC / AI','Resilience','Customer Fulfillment'],
+    datasets: [
+      { label: 'PepsiCo',    data: [7,6,8,8,9,7,8,9], backgroundColor: 'rgba(0,75,147,0.15)', borderColor: C.pepsi,  pointBackgroundColor: C.pepsi,  borderWidth: 2 },
+      { label: 'Coca-Cola',  data: [8,9,7,6,8,9,8,8], backgroundColor: 'rgba(227,24,55,0.1)',  borderColor: C.coke,   pointBackgroundColor: C.coke,   borderWidth: 2 },
+      { label: 'Nestlé',     data: [8,6,9,8,8,7,8,7], backgroundColor: 'rgba(123,63,0,0.1)',   borderColor: C.nestle, pointBackgroundColor: C.nestle, borderWidth: 2 },
+      { label: 'Kraft Heinz',data: [6,6,7,6,6,6,5,7], backgroundColor: 'rgba(124,58,237,0.1)', borderColor: C.kraft,  pointBackgroundColor: C.kraft,  borderWidth: 2 },
+    ]
+  },
+  options: {
+    scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, font: { family: 'Arial', size: 10 } }, pointLabels: { font: { family: 'Arial', size: 11 } } } },
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } },
+    responsive: true
+  }
+});
+</script>
+</body>
+</html>

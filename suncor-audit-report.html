@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suncor Energy – Competitive Intelligence Audit Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #003087;
+    --accent: #E8A020;
+    --dark: #0A0A0A;
+    --mid: #1C1C2E;
+    --text: #1A1A2E;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --green: #10B981;
+    --red: #EF4444;
+    --orange: #F59E0B;
+    --bg: #F8FAFC;
+    --white: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .sans { font-family: 'Arial', 'Helvetica', sans-serif; }
+
+  /* Cover */
+  .cover {
+    background: linear-gradient(135deg, #003087 0%, #001850 60%, #0A0A2E 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px 80px;
+    color: white;
+    page-break-after: always;
+  }
+  .cover-logo { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.6; font-family: Arial, sans-serif; }
+  .cover-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+  .cover h1 { font-size: 54px; font-weight: 700; line-height: 1.1; margin-bottom: 16px; }
+  .cover h1 span { color: var(--accent); }
+  .cover .subtitle { font-size: 20px; opacity: 0.75; font-family: Arial, sans-serif; font-weight: 300; margin-bottom: 48px; }
+  .cover-divider { width: 80px; height: 3px; background: var(--accent); margin-bottom: 48px; }
+  .cover-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 32px; }
+  .cover-meta-item label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; display: block; margin-bottom: 6px; }
+  .cover-meta-item span { font-size: 15px; font-weight: 600; }
+  .cover-footer { font-family: Arial, sans-serif; font-size: 11px; opacity: 0.4; }
+
+  /* Layout */
+  .page { max-width: 1100px; margin: 0 auto; padding: 60px 60px; }
+  .section { margin-bottom: 72px; }
+
+  /* Section Headers */
+  .section-label {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .section-title { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; line-height: 1.2; }
+  .section-subtitle { font-size: 16px; color: var(--muted); font-family: Arial, sans-serif; margin-bottom: 32px; }
+  .section-divider { width: 48px; height: 3px; background: var(--accent); margin-bottom: 32px; }
+
+  /* Executive Summary */
+  .exec-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+  .exec-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 28px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+  .exec-card.accent { border-left-color: var(--accent); }
+  .exec-card.green { border-left-color: var(--green); }
+  .exec-card h4 { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .exec-card ul { list-style: none; }
+  .exec-card ul li { font-family: Arial, sans-serif; font-size: 13.5px; color: var(--text); padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .exec-card ul li:last-child { border-bottom: none; }
+  .exec-card ul li::before { content: "→ "; color: var(--accent); font-weight: bold; }
+
+  /* KPI Row */
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 40px; }
+  .kpi-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    border-top: 3px solid var(--primary);
+  }
+  .kpi-card.accent-top { border-top-color: var(--accent); }
+  .kpi-value { font-size: 26px; font-weight: 700; color: var(--primary); font-family: Arial, sans-serif; }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.orange { color: var(--orange); }
+  .kpi-label { font-family: Arial, sans-serif; font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-delta { font-family: Arial, sans-serif; font-size: 12px; margin-top: 4px; }
+  .kpi-delta.neg { color: var(--red); }
+  .kpi-delta.pos { color: var(--green); }
+
+  /* Company Overview */
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .info-block { background: var(--white); border-radius: 8px; padding: 28px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .info-block h4 { font-family: Arial, sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-family: Arial, sans-serif; font-size: 13.5px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .label { color: var(--muted); }
+  .info-row .value { font-weight: 600; color: var(--text); text-align: right; }
+
+  /* Value Chain */
+  .value-chain { display: flex; align-items: stretch; gap: 0; margin: 32px 0; }
+  .vc-step {
+    flex: 1;
+    background: var(--primary);
+    color: white;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    font-family: Arial, sans-serif;
+  }
+  .vc-step:nth-child(2) { background: #004BB5; }
+  .vc-step:nth-child(3) { background: #0058D4; }
+  .vc-step:nth-child(4) { background: #1A6BE8; }
+  .vc-step:nth-child(5) { background: #3480F0; }
+  .vc-step::after {
+    content: '';
+    position: absolute;
+    right: -14px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 35px solid transparent;
+    border-bottom: 35px solid transparent;
+    border-left: 14px solid currentColor;
+    z-index: 1;
+  }
+  .vc-step:nth-child(1)::after { border-left-color: var(--primary); }
+  .vc-step:nth-child(2)::after { border-left-color: #004BB5; }
+  .vc-step:nth-child(3)::after { border-left-color: #0058D4; }
+  .vc-step:nth-child(4)::after { border-left-color: #1A6BE8; }
+  .vc-step:last-child::after { display: none; }
+  .vc-step h5 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .vc-step p { font-size: 11px; opacity: 0.85; line-height: 1.4; }
+
+  /* Charts */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+  .chart-card { background: var(--white); border-radius: 8px; padding: 28px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .chart-card h4 { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .chart-card .chart-sub { font-family: Arial, sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+  .chart-full { background: var(--white); border-radius: 8px; padding: 28px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); margin-bottom: 32px; }
+  .chart-full h4 { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .chart-full .chart-sub { font-family: Arial, sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+
+  /* Competitor Cards */
+  .competitor-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 36px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    margin-bottom: 28px;
+    border-top: 4px solid var(--primary);
+  }
+  .competitor-card.c2 { border-top-color: var(--accent); }
+  .competitor-card.c3 { border-top-color: #6366F1; }
+  .competitor-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .competitor-name { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .competitor-ticker { font-family: Arial, sans-serif; font-size: 12px; color: var(--muted); }
+  .competitor-badge { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 14px; font-family: Arial, sans-serif; font-size: 12px; color: var(--muted); }
+  .competitor-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .comp-metric { background: var(--bg); border-radius: 6px; padding: 16px; }
+  .comp-metric .m-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .comp-metric .m-value { font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: var(--text); }
+  .comp-strengths { margin-top: 20px; }
+  .comp-strengths h5 { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: #EEF2FF;
+    color: #4338CA;
+    border: 1px solid #C7D2FE;
+  }
+  .tag.green { background: #ECFDF5; color: #065F46; border-color: #A7F3D0; }
+  .tag.orange { background: #FFFBEB; color: #92400E; border-color: #FCD34D; }
+
+  /* Gap Table */
+  .gap-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+  .gap-table thead { background: var(--primary); color: white; }
+  .gap-table th { padding: 14px 16px; text-align: left; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
+  .gap-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .gap-table tr:last-child td { border-bottom: none; }
+  .gap-table tr:nth-child(even) td { background: #FAFAFA; }
+  .severity { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .severity.high { background: #FEE2E2; color: #991B1B; }
+  .severity.medium { background: #FEF3C7; color: #92400E; }
+  .severity.low { background: #D1FAE5; color: #065F46; }
+
+  /* Recommendations */
+  .reco-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .reco-column h4 {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .reco-column.quick h4 { background: #D1FAE5; color: #065F46; }
+  .reco-column.mid h4 { background: #FEF3C7; color: #92400E; }
+  .reco-column.strategic h4 { background: #EEF2FF; color: #3730A3; }
+  .reco-item {
+    background: var(--white);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    border-left: 3px solid var(--border);
+    font-family: Arial, sans-serif;
+  }
+  .reco-column.quick .reco-item { border-left-color: var(--green); }
+  .reco-column.mid .reco-item { border-left-color: var(--orange); }
+  .reco-column.strategic .reco-item { border-left-color: var(--primary); }
+  .reco-num { font-size: 10px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .reco-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .reco-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .reco-impact { display: inline-block; margin-top: 8px; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+  .impact-high { background: #FEE2E2; color: #991B1B; }
+  .impact-med { background: #FEF3C7; color: #92400E; }
+
+  /* Maturity Radar */
+  .radar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .maturity-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12.5px; }
+  .maturity-table th { padding: 10px 12px; background: var(--primary); color: white; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; text-align: left; }
+  .maturity-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .maturity-table tr:last-child td { border-bottom: none; }
+  .score-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .score-fill { height: 100%; border-radius: 4px; }
+
+  /* Footer */
+  .report-footer {
+    background: var(--mid);
+    color: rgba(255,255,255,0.5);
+    padding: 32px 60px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 80px;
+  }
+
+  /* Page break helpers */
+  .page-break { page-break-before: always; }
+
+  /* Benchmark table */
+  .bench-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.06); margin-bottom: 32px; }
+  .bench-table thead { background: var(--primary); color: white; }
+  .bench-table th { padding: 14px 16px; text-align: center; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
+  .bench-table th:first-child { text-align: left; }
+  .bench-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); text-align: center; }
+  .bench-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+  .bench-table tr:nth-child(even) td { background: #FAFAFA; }
+  .bench-table tr:last-child td { border-bottom: none; }
+  .best { color: var(--green); font-weight: 700; }
+  .worst { color: var(--red); }
+
+  h2.section-title-alt { font-size: 18px; font-weight: 700; color: var(--primary); font-family: Arial, sans-serif; margin: 24px 0 12px; }
+
+  p.body-text { font-size: 15px; color: #374151; line-height: 1.8; margin-bottom: 16px; }
+
+  .callout { background: #EEF6FF; border-left: 4px solid var(--primary); border-radius: 4px; padding: 16px 20px; margin: 24px 0; font-family: Arial, sans-serif; font-size: 14px; color: var(--primary); }
+
+  @media print {
+    .cover { min-height: auto; }
+    .page { padding: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ COVER ═══════════════════ -->
+<div class="cover">
+  <div class="cover-logo">AutomationX · Competitive Intelligence</div>
+  <div>
+    <div class="cover-badge">Confidential — Strategic Report</div>
+    <h1>Suncor Energy<br><span>Competitive Audit</span></h1>
+    <div class="subtitle">Supply Chain & Competitive Intelligence Analysis · Energy Sector</div>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><label>Target Company</label><span>Suncor Energy Inc.</span></div>
+      <div class="cover-meta-item"><label>Industry</label><span>Integrated Energy</span></div>
+      <div class="cover-meta-item"><label>Report Date</label><span>April 7, 2026</span></div>
+      <div class="cover-meta-item"><label>Benchmarked Against</label><span>3 Peers</span></div>
+    </div>
+  </div>
+  <div class="cover-footer">Prepared by AutomationX · For Executive Use Only · Suncor Energy Competitive Intelligence Audit 2026</div>
+</div>
+
+<!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+<div class="page">
+
+  <!-- ── EXECUTIVE SUMMARY ── -->
+  <div class="section">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">Executive Summary</div>
+    <div class="section-subtitle">Strategic overview, key risks, and high-priority opportunities for Suncor's leadership team</div>
+    <div class="section-divider"></div>
+
+    <div class="exec-grid">
+      <div class="exec-card">
+        <h4>Key Insights</h4>
+        <ul>
+          <li>Suncor commands ~20% of Canada's consumer fuel market via Petro-Canada</li>
+          <li>Revenue declined 3.5% YoY to $48.9B CAD in 2025; EBITDA down 8.6%</li>
+          <li>Vertical integration from oil sands to retail is a structural competitive moat</li>
+          <li>91% of supply chain spend is Canada-based — low geopolitical risk</li>
+          <li>Investor Day (March 2026) confirms 100,000 BPD expansion target by 2028</li>
+        </ul>
+      </div>
+      <div class="exec-card accent">
+        <h4>Strategic Risks</h4>
+        <ul>
+          <li>EBITDA compression driven by lower WTI realizations and rising COGS</li>
+          <li>CNR's breakeven of ~$40/bbl WTI undercuts Suncor's cost position</li>
+          <li>Cenovus nearing 1M boe/d — scale convergence reducing Suncor's production lead</li>
+          <li>Competition Act amendments restrict Suncor's environmental messaging</li>
+          <li>Energy transition pressure threatening long-term oil sands economics</li>
+        </ul>
+      </div>
+      <div class="exec-card green">
+        <h4>Growth Opportunities</h4>
+        <ul>
+          <li>Canada's Electric Highway EV network positions Suncor for energy transition</li>
+          <li>SAF (Sustainable Aviation Fuel) production at Montreal Refinery is live</li>
+          <li>Upgrader replacement at Base Plant improves per-barrel margins</li>
+          <li>5,212-vendor supply chain presents consolidation and cost-reduction upside</li>
+          <li>Digital supply chain &amp; AI adoption can unlock $500M–$1B in working capital</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">$48.9B</div>
+        <div class="kpi-label">2025 Revenue (CAD)</div>
+        <div class="kpi-delta neg">▼ 3.5% YoY</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value orange">$11.4B</div>
+        <div class="kpi-label">2025 EBITDA (CAD)</div>
+        <div class="kpi-delta neg">▼ 8.6% YoY</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">41.4%</div>
+        <div class="kpi-label">Gross Margin</div>
+        <div class="kpi-delta pos">Best-in-class</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value green">~20%</div>
+        <div class="kpi-label">Canadian Fuel Mkt Share</div>
+        <div class="kpi-delta pos">Via Petro-Canada</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value">5,212</div>
+        <div class="kpi-label">Supply Chain Vendors</div>
+        <div class="kpi-delta">99.7% North America</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TARGET COMPANY OVERVIEW ── -->
+  <div class="section">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Target Company Overview</div>
+    <div class="section-subtitle">Suncor Energy Inc. — Canada's leading integrated energy company</div>
+    <div class="section-divider"></div>
+
+    <p class="body-text">Suncor Energy is a globally competitive integrated energy company headquartered in Calgary, Alberta. Unlike pure upstream producers, Suncor's vertical integration — from oil sands extraction through upgrading, refining, and retail distribution — creates a unique and defensible supply chain model. Its ownership of the Petro-Canada network (1,800+ locations) and Canada's Electric Highway positions it as the only Canadian energy company with a coast-to-coast consumer fuel and EV charging presence.</p>
+
+    <div class="overview-grid">
+      <div class="info-block">
+        <h4>Business Profile</h4>
+        <div class="info-row"><span class="label">Business Model</span><span class="value">Integrated B2B + B2C</span></div>
+        <div class="info-row"><span class="label">Headquarters</span><span class="value">Calgary, Alberta, Canada</span></div>
+        <div class="info-row"><span class="label">Stock Exchange</span><span class="value">TSX: SU | NYSE: SU</span></div>
+        <div class="info-row"><span class="label">Market Cap (Apr 2026)</span><span class="value">~CAD $65B+</span></div>
+        <div class="info-row"><span class="label">Employees</span><span class="value">~13,700</span></div>
+        <div class="info-row"><span class="label">Retail Outlets</span><span class="value">1,800+ Petro-Canada stations</span></div>
+        <div class="info-row"><span class="label">CEO</span><span class="value">Rich Kruger</span></div>
+      </div>
+      <div class="info-block">
+        <h4>Core Operations &amp; Segments</h4>
+        <div class="info-row"><span class="label">Oil Sands</span><span class="value">Base Plant, Fort Hills, MacKay River</span></div>
+        <div class="info-row"><span class="label">Offshore</span><span class="value">Hebron, Terra Nova (Atlantic Canada)</span></div>
+        <div class="info-row"><span class="label">Refining</span><span class="value">Montreal, Edmonton, Sarnia, Denver</span></div>
+        <div class="info-row"><span class="label">Retail / Wholesale</span><span class="value">Petro-Canada (Canada-wide)</span></div>
+        <div class="info-row"><span class="label">Low-Carbon</span><span class="value">SAF, EV Highway, Renewables</span></div>
+        <div class="info-row"><span class="label">Trading</span><span class="value">Crude, NatGas, Refined Products, Power</span></div>
+        <div class="info-row"><span class="label">Supply Chain Spend</span><span class="value">~91% Canada-based</span></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Value Proposition:</strong> Suncor's vertically integrated model — spanning upstream production, upgrading, refining, and retail — provides structural cost and margin advantages unavailable to pure-play oil sands producers. The Petro-Canada brand reinforces consumer-facing revenue diversification, while Canada's Electric Highway signals a credible energy transition hedge.
+    </div>
+  </div>
+
+  <!-- ── INDUSTRY & VALUE CHAIN ── -->
+  <div class="section">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">Industry Overview &amp; Value Chain</div>
+    <div class="section-subtitle">Canadian oil sands industry structure, key trends, and end-to-end supply chain mapping</div>
+    <div class="section-divider"></div>
+
+    <p class="body-text">The Canadian energy sector is dominated by oil sands production, which accounts for the vast majority of Canada's ~5M boe/d output. The top five operators — Suncor, Canadian Natural Resources (CNR), Cenovus, Imperial Oil, and ConocoPhillips — control approximately 85% of Alberta's oil sands production. In 2026, combined output from the big four (Suncor, CNR, Cenovus, Imperial) is projected at 3.9M boe/d, with 75% concentrated in Alberta's oil sands.</p>
+
+    <h2 class="section-title-alt">Suncor Supply Chain Value Chain (Plan → Source → Make → Deliver → Return)</h2>
+
+    <div class="value-chain">
+      <div class="vc-step">
+        <h5>Plan</h5>
+        <p>S&amp;OP, production forecasting, capital allocation, turnaround scheduling</p>
+      </div>
+      <div class="vc-step">
+        <h5>Source</h5>
+        <p>5,212 vendors, 91% Canada spend, reagents, equipment, maintenance services</p>
+      </div>
+      <div class="vc-step">
+        <h5>Make</h5>
+        <p>Oil sands extraction, upgrading (SCO), offshore production, refining (4 facilities)</p>
+      </div>
+      <div class="vc-step">
+        <h5>Deliver</h5>
+        <p>Pipeline, terminal, Petro-Canada network (1,800+), wholesale distribution, EV charging</p>
+      </div>
+      <div class="vc-step">
+        <h5>Return / Recycle</h5>
+        <p>Tailings reclamation, water reuse, coke drum replacement, sustainability reporting</p>
+      </div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="info-block">
+        <h4>Key Industry Trends</h4>
+        <div class="info-row"><span class="label">Oil Sands Resilience</span><span class="value">Demonstrated durability at $40-50 WTI</span></div>
+        <div class="info-row"><span class="label">M&amp;A Wave</span><span class="value">Mega-mergers reshaping competitive landscape</span></div>
+        <div class="info-row"><span class="label">Energy Transition</span><span class="value">SAF, EV, Low-carbon investment mandates</span></div>
+        <div class="info-row"><span class="label">Digitization</span><span class="value">AI, autonomous haul trucks, control towers</span></div>
+        <div class="info-row"><span class="label">Regulatory Pressure</span><span class="value">Competition Act, carbon pricing, GHG targets</span></div>
+        <div class="info-row"><span class="label">Pipeline Access</span><span class="value">TMX expansion improving export optionality</span></div>
+      </div>
+      <div class="info-block">
+        <h4>Margin Pool Distribution</h4>
+        <div class="info-row"><span class="label">Upstream (Oil Sands)</span><span class="value">Highest margin at scale (~$15-25/bbl)</span></div>
+        <div class="info-row"><span class="label">Upgrading</span><span class="value">Value-add of $5-10/bbl (SCO premium)</span></div>
+        <div class="info-row"><span class="label">Refining</span><span class="value">Moderate: $3-8/bbl crack spread</span></div>
+        <div class="info-row"><span class="label">Retail (Petro-Canada)</span><span class="value">Thin but stable, ~2-4¢/litre</span></div>
+        <div class="info-row"><span class="label">Trading</span><span class="value">Variable; provides cost optimization</span></div>
+        <div class="info-row"><span class="label">Bottleneck</span><span class="value">Upgrader reliability &amp; turnaround frequency</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINANCIAL ANALYSIS ── -->
+  <div class="section page-break">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Financial Analysis — Suncor</div>
+    <div class="section-subtitle">Revenue, margin, and supply chain working capital metrics (2022–2025)</div>
+    <div class="section-divider"></div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>Revenue vs. COGS (2022–2025)</h4>
+        <div class="chart-sub">CAD Billions · Suncor Energy Inc.</div>
+        <canvas id="revCOGS" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>EBITDA &amp; Gross Margin Trend</h4>
+        <div class="chart-sub">CAD Billions · EBITDA Bar | Gross Margin % Line</div>
+        <canvas id="ebitdaMargin" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-full">
+      <h4>Working Capital Metrics (Estimated — Industry Proxies for Integrated Energy)</h4>
+      <div class="chart-sub">Days Sales Outstanding (DSO) · Days Inventory Outstanding (DIO) · Days Payable Outstanding (DPO)</div>
+      <canvas id="workingCapital" height="130"></canvas>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">~35</div>
+        <div class="kpi-label">DSO (Days)</div>
+        <div class="kpi-delta">Receivables turnover</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value orange">~18</div>
+        <div class="kpi-label">DIO (Days)</div>
+        <div class="kpi-delta">Refined product inventory</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value green">~45</div>
+        <div class="kpi-label">DPO (Days)</div>
+        <div class="kpi-delta">Supplier payment terms</div>
+      </div>
+      <div class="kpi-card accent-top">
+        <div class="kpi-value">~8</div>
+        <div class="kpi-label">C2C Cycle (Days)</div>
+        <div class="kpi-delta">DSO + DIO – DPO</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">~20x</div>
+        <div class="kpi-label">Inventory Turns</div>
+        <div class="kpi-delta">Integrated energy benchmark</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPETITOR DEEP DIVE ── -->
+  <div class="section">
+    <div class="section-label">Section 05</div>
+    <div class="section-title">Competitor Deep Dive</div>
+    <div class="section-subtitle">Top 3 direct competitors in Canadian integrated / oil sands energy</div>
+    <div class="section-divider"></div>
+
+    <!-- CNR -->
+    <div class="competitor-card">
+      <div class="competitor-header">
+        <div>
+          <div class="competitor-name">Canadian Natural Resources (CNR)</div>
+          <div class="competitor-ticker">TSX: CNQ · NYSE: CNQ · Headquarters: Calgary, AB</div>
+        </div>
+        <div class="competitor-badge">Competitor #1</div>
+      </div>
+      <div class="competitor-grid">
+        <div class="comp-metric"><div class="m-label">2025 Revenue (TTM)</div><div class="m-value">~$27.6B CAD</div></div>
+        <div class="comp-metric"><div class="m-label">Net Debt / EBITDA</div><div class="m-value">~0.7x</div></div>
+        <div class="comp-metric"><div class="m-label">2026 Production Target</div><div class="m-value">1.6M boe/d</div></div>
+        <div class="comp-metric"><div class="m-label">WTI Breakeven</div><div class="m-value">~$40/bbl</div></div>
+        <div class="comp-metric"><div class="m-label">2026 Capex</div><div class="m-value">C$6.2B</div></div>
+        <div class="comp-metric"><div class="m-label">Geographic Scope</div><div class="m-value">Canada · N. Sea · Africa</div></div>
+      </div>
+      <div class="comp-strengths">
+        <h5>Key Strengths &amp; Differentiators</h5>
+        <div class="tag-row">
+          <span class="tag green">Lowest Breakeven Cost (~$40 WTI)</span>
+          <span class="tag green">Sole Owner – Albian Oil Sands Mine</span>
+          <span class="tag">Record Production Target 1.6M boe/d</span>
+          <span class="tag">Diversified Geography (UK, Africa)</span>
+          <span class="tag orange">No Retail Downstream Exposure</span>
+          <span class="tag">Low 0.7x Net Debt/EBITDA</span>
+        </div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#6B7280;margin-top:16px;line-height:1.6;">CNR is Suncor's most formidable upstream rival. With the industry's lowest breakeven cost, record production ramp, and the acquisition of full control over the Albian oil sands mine, CNR presents a direct threat to Suncor's upstream cost-competitiveness. However, CNR lacks Suncor's integrated retail and refining downstream, making Suncor's full-value-chain model more resilient during commodity downturns.</p>
+    </div>
+
+    <!-- Cenovus -->
+    <div class="competitor-card c2">
+      <div class="competitor-header">
+        <div>
+          <div class="competitor-name">Cenovus Energy</div>
+          <div class="competitor-ticker">TSX: CVE · NYSE: CVE · Headquarters: Calgary, AB</div>
+        </div>
+        <div class="competitor-badge">Competitor #2</div>
+      </div>
+      <div class="competitor-grid">
+        <div class="comp-metric"><div class="m-label">2025 Revenue</div><div class="m-value">~$49.7B CAD</div></div>
+        <div class="comp-metric"><div class="m-label">Q4 2025 Oper. Cash</div><div class="m-value">~$2.4B</div></div>
+        <div class="comp-metric"><div class="m-label">2026 Production</div><div class="m-value">~985K boe/d</div></div>
+        <div class="comp-metric"><div class="m-label">Production Growth (2020→2025)</div><div class="m-value">+109%</div></div>
+        <div class="comp-metric"><div class="m-label">2026 Capex</div><div class="m-value">$4.6–5.0B</div></div>
+        <div class="comp-metric"><div class="m-label">Key Acquisition (2026)</div><div class="m-value">MEG Energy</div></div>
+      </div>
+      <div class="comp-strengths">
+        <h5>Key Strengths &amp; Differentiators</h5>
+        <div class="tag-row">
+          <span class="tag green">Fastest-Growing Major Producer</span>
+          <span class="tag green">MEG Energy Acquisition Adds Scale</span>
+          <span class="tag">Integrated Downstream (US Refineries)</span>
+          <span class="tag">Aggressive M&amp;A Strategy</span>
+          <span class="tag orange">Higher Leverage vs. CNR</span>
+          <span class="tag orange">No Consumer Retail Brand</span>
+        </div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#6B7280;margin-top:16px;line-height:1.6;">Cenovus has doubled its production since 2020 and with the MEG Energy acquisition is approaching Suncor's scale. Its aggressive inorganic growth strategy via acquisition mirrors Suncor's historical playbook and creates direct competitive pressure. Cenovus's US refining footprint (Superior, Toledo, Lima) creates some downstream diversification, though it lacks Suncor's coast-to-coast retail brand.</p>
+    </div>
+
+    <!-- Imperial Oil -->
+    <div class="competitor-card c3">
+      <div class="competitor-header">
+        <div>
+          <div class="competitor-name">Imperial Oil Limited</div>
+          <div class="competitor-ticker">TSX: IMO · Majority-owned by ExxonMobil · Headquarters: Calgary, AB</div>
+        </div>
+        <div class="competitor-badge">Competitor #3</div>
+      </div>
+      <div class="competitor-grid">
+        <div class="comp-metric"><div class="m-label">2025 Revenue (TTM)</div><div class="m-value">~$34.6B CAD</div></div>
+        <div class="comp-metric"><div class="m-label">2025 Full Year Cash Flow</div><div class="m-value">CAD $6.7B</div></div>
+        <div class="comp-metric"><div class="m-label">Shareholder Returns (2025)</div><div class="m-value">CAD $4.6B</div></div>
+        <div class="comp-metric"><div class="m-label">Stock Price (Apr 2026)</div><div class="m-value">CAD $180.30</div></div>
+        <div class="comp-metric"><div class="m-label">2026 Capex</div><div class="m-value">$2.0B</div></div>
+        <div class="comp-metric"><div class="m-label">Retail Brands</div><div class="m-value">Esso + Mobil</div></div>
+      </div>
+      <div class="comp-strengths">
+        <h5>Key Strengths &amp; Differentiators</h5>
+        <div class="tag-row">
+          <span class="tag green">ExxonMobil Technology &amp; Capital Backing</span>
+          <span class="tag green">Kearl Water-Reuse Technology (ESG)</span>
+          <span class="tag">Esso/Mobil Dual Retail Brand Recognition</span>
+          <span class="tag">Disciplined Capital Returns Program</span>
+          <span class="tag orange">Smaller Production Scale vs. Suncor</span>
+          <span class="tag orange">Less Agile (Parent Corp. Oversight)</span>
+        </div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:13px;color:#6B7280;margin-top:16px;line-height:1.6;">Imperial Oil benefits from ExxonMobil's global technology and capital ecosystem, giving it an R&D advantage in operational innovation (e.g., Kearl water-reuse technology). Its dual retail brand strategy (Esso + Mobil) competes directly with Petro-Canada for consumer wallet share. However, its smaller production scale and parent company governance constraints limit its strategic agility relative to Suncor.</p>
+    </div>
+  </div>
+
+  <!-- ── PEER BENCHMARKING ── -->
+  <div class="section page-break">
+    <div class="section-label">Section 06</div>
+    <div class="section-title">Peer Benchmarking Dashboard</div>
+    <div class="section-subtitle">Side-by-side financial and supply chain comparison across all four companies</div>
+    <div class="section-divider"></div>
+
+    <table class="bench-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Suncor (SU)</th>
+          <th>CNR (CNQ)</th>
+          <th>Cenovus (CVE)</th>
+          <th>Imperial (IMO)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025 Revenue (CAD)</td>
+          <td>$48.9B</td>
+          <td class="best">$27.6B</td>
+          <td>$49.7B</td>
+          <td>$34.6B</td>
+        </tr>
+        <tr>
+          <td>EBITDA (CAD, est.)</td>
+          <td>$11.4B</td>
+          <td class="best">$13.0B+</td>
+          <td>$10.5B</td>
+          <td>$7.5B</td>
+        </tr>
+        <tr>
+          <td>Gross Margin %</td>
+          <td class="best">41.4%</td>
+          <td>~38%</td>
+          <td>~22%</td>
+          <td>~30%</td>
+        </tr>
+        <tr>
+          <td>WTI Breakeven ($/bbl)</td>
+          <td>~$45</td>
+          <td class="best">~$40</td>
+          <td>~$45</td>
+          <td>~$43</td>
+        </tr>
+        <tr>
+          <td>2026 Production (boe/d)</td>
+          <td>~780K</td>
+          <td class="best">1,600K</td>
+          <td>~985K</td>
+          <td>~420K</td>
+        </tr>
+        <tr>
+          <td>2026 Capex</td>
+          <td>~$6.1B</td>
+          <td class="best">C$6.2B</td>
+          <td>$4.6–5.0B</td>
+          <td>$2.0B</td>
+        </tr>
+        <tr>
+          <td>Net Debt / EBITDA</td>
+          <td>~1.1x</td>
+          <td class="best">~0.7x</td>
+          <td>~1.3x</td>
+          <td class="best">~0.4x</td>
+        </tr>
+        <tr>
+          <td>Retail Network</td>
+          <td class="best">1,800+ Petro-Canada</td>
+          <td class="worst">None</td>
+          <td class="worst">None</td>
+          <td>Esso + Mobil</td>
+        </tr>
+        <tr>
+          <td>Supply Chain Scope</td>
+          <td class="best">Full Vertical Integration</td>
+          <td>Upstream Only</td>
+          <td>Upstream + Refining</td>
+          <td>Upstream + Retail</td>
+        </tr>
+        <tr>
+          <td>DSO (Days, est.)</td>
+          <td>~35</td>
+          <td>~30</td>
+          <td>~38</td>
+          <td class="best">~28</td>
+        </tr>
+        <tr>
+          <td>DIO (Days, est.)</td>
+          <td>~18</td>
+          <td class="best">~12</td>
+          <td>~22</td>
+          <td>~16</td>
+        </tr>
+        <tr>
+          <td>DPO (Days, est.)</td>
+          <td>~45</td>
+          <td>~40</td>
+          <td>~48</td>
+          <td class="best">~50</td>
+        </tr>
+        <tr>
+          <td>C2C Cycle (Days)</td>
+          <td>~8</td>
+          <td class="best">~2</td>
+          <td>~12</td>
+          <td>~-6 (Favourable)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>Revenue Comparison (2025, CAD Billions)</h4>
+        <div class="chart-sub">All four companies — full year 2025</div>
+        <canvas id="revBar" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>EBITDA Comparison (2025, CAD Billions)</h4>
+        <div class="chart-sub">Estimated EBITDA across peer group</div>
+        <canvas id="ebitdaBar" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h4>Cash-to-Cash Cycle Comparison</h4>
+        <div class="chart-sub">Lower is better — DSO + DIO – DPO (estimated days)</div>
+        <canvas id="c2cBar" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>EBIT Margin Comparison (%)</h4>
+        <div class="chart-sub">Estimated EBIT margin across peer group</div>
+        <canvas id="ebitMargin" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUPPLY CHAIN MATURITY ── -->
+  <div class="section">
+    <div class="section-label">Section 07</div>
+    <div class="section-title">Supply Chain Capability Maturity</div>
+    <div class="section-subtitle">Score 1–10 across eight supply chain dimensions vs. top competitors</div>
+    <div class="section-divider"></div>
+
+    <div class="radar-grid">
+      <div>
+        <canvas id="radarChart" height="320"></canvas>
+      </div>
+      <table class="maturity-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Suncor</th>
+            <th>CNR</th>
+            <th>Cenovus</th>
+            <th>Imperial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Demand Planning &amp; Forecasting</td>
+            <td>7<div class="score-bar"><div class="score-fill" style="width:70%;background:#003087"></div></div></td>
+            <td>6</td><td>7</td><td>8</td>
+          </tr>
+          <tr>
+            <td>Inventory Optimization</td>
+            <td>7<div class="score-bar"><div class="score-fill" style="width:70%;background:#003087"></div></div></td>
+            <td>8</td><td>6</td><td>8</td>
+          </tr>
+          <tr>
+            <td>Supplier Collaboration</td>
+            <td>8<div class="score-bar"><div class="score-fill" style="width:80%;background:#003087"></div></div></td>
+            <td>6</td><td>6</td><td>9</td>
+          </tr>
+          <tr>
+            <td>Manufacturing Flexibility</td>
+            <td>8<div class="score-bar"><div class="score-fill" style="width:80%;background:#003087"></div></div></td>
+            <td>7</td><td>7</td><td>7</td>
+          </tr>
+          <tr>
+            <td>Logistics &amp; Network</td>
+            <td>9<div class="score-bar"><div class="score-fill" style="width:90%;background:#003087"></div></div></td>
+            <td>6</td><td>7</td><td>7</td>
+          </tr>
+          <tr>
+            <td>Digital SC (AI / Control Tower)</td>
+            <td>6<div class="score-bar"><div class="score-fill" style="width:60%;background:#E8A020"></div></div></td>
+            <td>6</td><td>6</td><td>8</td>
+          </tr>
+          <tr>
+            <td>Resilience &amp; Risk Mgmt</td>
+            <td>8<div class="score-bar"><div class="score-fill" style="width:80%;background:#003087"></div></div></td>
+            <td>8</td><td>6</td><td>7</td>
+          </tr>
+          <tr>
+            <td>Customer Fulfillment</td>
+            <td>9<div class="score-bar"><div class="score-fill" style="width:90%;background:#003087"></div></div></td>
+            <td>5</td><td>6</td><td>8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── GAP ANALYSIS ── -->
+  <div class="section page-break">
+    <div class="section-label">Section 08</div>
+    <div class="section-title">Gap Analysis</div>
+    <div class="section-subtitle">Structured capability and operational gaps vs. best-in-class peer benchmarks</div>
+    <div class="section-divider"></div>
+
+    <table class="gap-table">
+      <thead>
+        <tr>
+          <th>Capability / Area</th>
+          <th>Suncor Current State</th>
+          <th>Best-in-Class (Peer)</th>
+          <th>Gap</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Upstream Production Cost</strong></td>
+          <td>~$45/bbl breakeven</td>
+          <td>CNR ~$40/bbl</td>
+          <td>$5/bbl cost disadvantage</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Production Scale</strong></td>
+          <td>~780K boe/d (2026)</td>
+          <td>CNR 1.6M boe/d</td>
+          <td>2x production gap vs. CNR</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Digital Supply Chain (AI/Control Tower)</strong></td>
+          <td>Limited AI adoption; manual scheduling</td>
+          <td>Imperial (ExxonMobil AI) — Score 8/10</td>
+          <td>2-point maturity gap vs. Imperial</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>EBITDA Margin Trend</strong></td>
+          <td>EBITDA down 8.6% YoY in 2025</td>
+          <td>CNR — Low debt, stable EBITDA</td>
+          <td>Margin compression accelerating</td>
+          <td><span class="severity high">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Inventory Optimization (DIO)</strong></td>
+          <td>~18 days DIO</td>
+          <td>CNR ~12 days</td>
+          <td>6 days excess inventory holding</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Supplier Payment Terms (DPO)</strong></td>
+          <td>~45 days DPO</td>
+          <td>Imperial ~50 days</td>
+          <td>5 days payable advantage gap</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Demand Planning Accuracy</strong></td>
+          <td>Score 7/10 — legacy systems</td>
+          <td>Imperial 8/10 (ExxonMobil tools)</td>
+          <td>Forecasting accuracy 1-point gap</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Supplier Diversification</strong></td>
+          <td>5,212 vendors, 91% Canada</td>
+          <td>CNR — Tighter, more optimized base</td>
+          <td>Vendor base potentially over-fragmented</td>
+          <td><span class="severity medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Sustainability Communication</strong></td>
+          <td>Restricted by Competition Act</td>
+          <td>Imperial — Kearl water tech publicized</td>
+          <td>ESG messaging gap vs. peers</td>
+          <td><span class="severity low">Low</span></td>
+        </tr>
+        <tr>
+          <td><strong>Offshore Production Optimization</strong></td>
+          <td>Hebron + Terra Nova (Atlantic)</td>
+          <td>CNR — UK North Sea maturity</td>
+          <td>Offshore asset productivity gap</td>
+          <td><span class="severity low">Low</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── STRATEGIC RECOMMENDATIONS ── -->
+  <div class="section">
+    <div class="section-label">Section 09</div>
+    <div class="section-title">Strategic Recommendations</div>
+    <div class="section-subtitle">Top 10 prioritized initiatives — ranked by impact vs. effort, for CSCO / COO / CXO audience</div>
+    <div class="section-divider"></div>
+
+    <div class="reco-grid">
+      <div class="reco-column quick">
+        <h4>Quick Wins (0–30 Days)</h4>
+        <div class="reco-item">
+          <div class="reco-num">Rec #1</div>
+          <div class="reco-title">SKU Rationalization &amp; Excess Inventory Reduction</div>
+          <div class="reco-desc">Audit slow-moving &amp; obsolete refined product SKUs across 4 refineries. Target 10% DIO reduction (from ~18 to ~16 days) to free ~$400M in working capital.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #2</div>
+          <div class="reco-title">DSO Reduction via AR Automation</div>
+          <div class="reco-desc">Implement e-invoicing and early payment incentives for Petro-Canada wholesale customers. Target DSO from ~35 to ~28 days, releasing ~$1.0B in receivables.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #3</div>
+          <div class="reco-title">Renegotiate Key Supplier Payment Terms</div>
+          <div class="reco-desc">Extend DPO from ~45 to ~52 days for top 500 strategic vendors. At Suncor's spend scale, every 5 days DPO = ~$500M+ in free float.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+      </div>
+      <div class="reco-column mid">
+        <h4>Mid-Term (3–6 Months)</h4>
+        <div class="reco-item">
+          <div class="reco-num">Rec #4</div>
+          <div class="reco-title">AI-Powered Demand Forecasting &amp; S&amp;OP Transformation</div>
+          <div class="reco-desc">Deploy ML-based demand sensing across refining and retail segments. Target forecast accuracy improvement from ~75% to ~88%, reducing inventory buffer stock by 15%.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #5</div>
+          <div class="reco-title">Vendor Base Consolidation Program</div>
+          <div class="reco-desc">Rationalize from 5,212 to ~3,500 strategic vendors via category management. Target 5-8% procurement cost reduction (~$200-300M at Suncor's spend scale).</div>
+          <span class="reco-impact impact-med">Medium Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #6</div>
+          <div class="reco-title">Upgrader Reliability Improvement Program</div>
+          <div class="reco-desc">Build on coke drum replacement success at Base Plant. Reduce unplanned downtime by 20% to protect per-barrel operating cost advantage vs. CNR's $40 breakeven.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+      </div>
+      <div class="reco-column strategic">
+        <h4>Strategic Bets (6–18 Months)</h4>
+        <div class="reco-item">
+          <div class="reco-num">Rec #7</div>
+          <div class="reco-title">Deploy Integrated Supply Chain Control Tower</div>
+          <div class="reco-desc">Build end-to-end supply chain visibility from well-head to pump. Connects upstream production, refinery throughput, logistics, and Petro-Canada retail in a single data layer. Closes 2-point digital gap vs. Imperial.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #8</div>
+          <div class="reco-title">Scale SAF &amp; Low-Carbon Fuels Production</div>
+          <div class="reco-desc">Accelerate Sustainable Aviation Fuel (SAF) production at Montreal Refinery and pursue additional low-carbon refining conversions. Positions Suncor uniquely vs. all three competitors.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #9</div>
+          <div class="reco-title">Dual-Source Critical Upstream Suppliers</div>
+          <div class="reco-desc">Implement dual-sourcing for top 50 critical maintenance &amp; reagent suppliers to reduce concentration risk. Target: no single vendor representing &gt;5% of a category spend.</div>
+          <span class="reco-impact impact-med">Medium Impact</span>
+        </div>
+        <div class="reco-item">
+          <div class="reco-num">Rec #10</div>
+          <div class="reco-title">Expand Canada's Electric Highway as Revenue Stream</div>
+          <div class="reco-desc">Monetize EV charging infrastructure via B2B fleet partnerships and subscription models. This transforms a CapEx investment into a recurring revenue stream, hedging against gasoline demand erosion.</div>
+          <span class="reco-impact impact-high">High Impact</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<div class="report-footer">
+  <span>© 2026 AutomationX · Competitive Intelligence Division · For Executive Use Only</span>
+  <span>Suncor Energy Inc. — Full Competitive Audit | Generated: April 7, 2026</span>
+</div>
+
+<!-- ═══════════════════ CHARTS ═══════════════════ -->
+<script>
+const COLORS = {
+  suncor: '#003087',
+  cnr: '#E8A020',
+  cenovus: '#10B981',
+  imperial: '#6366F1',
+  light: 'rgba(0,48,135,0.1)',
+};
+
+// 1. Revenue vs COGS
+new Chart(document.getElementById('revCOGS'), {
+  type: 'bar',
+  data: {
+    labels: ['2022', '2023', '2024', '2025'],
+    datasets: [
+      {
+        label: 'Revenue (CAD $B)',
+        data: [58.5, 55.2, 50.7, 48.9],
+        backgroundColor: COLORS.suncor,
+        borderRadius: 4,
+      },
+      {
+        label: 'COGS (CAD $B)',
+        data: [36.4, 33.8, 31.1, 30.7],
+        backgroundColor: COLORS.cnr,
+        borderRadius: 4,
+      },
+    ]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } }, scales: { y: { beginAtZero: false, min: 25, ticks: { callback: v => '$' + v + 'B' } } }, responsive: true }
+});
+
+// 2. EBITDA & Gross Margin
+new Chart(document.getElementById('ebitdaMargin'), {
+  type: 'bar',
+  data: {
+    labels: ['2022', '2023', '2024', '2025'],
+    datasets: [
+      {
+        type: 'bar',
+        label: 'EBITDA (CAD $B)',
+        data: [16.2, 14.8, 12.4, 11.4],
+        backgroundColor: COLORS.suncor,
+        borderRadius: 4,
+        yAxisID: 'y',
+      },
+      {
+        type: 'line',
+        label: 'Gross Margin %',
+        data: [37.8, 38.7, 38.5, 41.4],
+        borderColor: COLORS.cnr,
+        backgroundColor: 'transparent',
+        tension: 0.4,
+        pointRadius: 5,
+        yAxisID: 'y1',
+      }
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } },
+    scales: {
+      y: { position: 'left', ticks: { callback: v => '$' + v + 'B' } },
+      y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: v => v + '%' } }
+    },
+    responsive: true
+  }
+});
+
+// 3. Working Capital
+new Chart(document.getElementById('workingCapital'), {
+  type: 'bar',
+  data: {
+    labels: ['2022', '2023', '2024', '2025'],
+    datasets: [
+      { label: 'DSO (Days)', data: [38, 37, 36, 35], backgroundColor: COLORS.suncor, borderRadius: 3 },
+      { label: 'DIO (Days)', data: [22, 21, 20, 18], backgroundColor: COLORS.cnr, borderRadius: 3 },
+      { label: 'DPO (Days)', data: [42, 43, 44, 45], backgroundColor: COLORS.cenovus, borderRadius: 3 },
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + 'd' } } },
+    responsive: true
+  }
+});
+
+// 4. Revenue Bar Comparison
+new Chart(document.getElementById('revBar'), {
+  type: 'bar',
+  data: {
+    labels: ['Suncor', 'CNR', 'Cenovus', 'Imperial'],
+    datasets: [{
+      label: 'Revenue 2025 (CAD $B)',
+      data: [48.9, 27.6, 49.7, 34.6],
+      backgroundColor: [COLORS.suncor, COLORS.cnr, COLORS.cenovus, COLORS.imperial],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => '$' + v + 'B' } } },
+    responsive: true
+  }
+});
+
+// 5. EBITDA Bar
+new Chart(document.getElementById('ebitdaBar'), {
+  type: 'bar',
+  data: {
+    labels: ['Suncor', 'CNR', 'Cenovus', 'Imperial'],
+    datasets: [{
+      label: 'EBITDA 2025 (CAD $B, est.)',
+      data: [11.4, 13.0, 10.5, 7.5],
+      backgroundColor: [COLORS.suncor, COLORS.cnr, COLORS.cenovus, COLORS.imperial],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => '$' + v + 'B' } } },
+    responsive: true
+  }
+});
+
+// 6. C2C Bar
+new Chart(document.getElementById('c2cBar'), {
+  type: 'bar',
+  data: {
+    labels: ['Suncor', 'CNR', 'Cenovus', 'Imperial'],
+    datasets: [{
+      label: 'Cash-to-Cash Cycle (Days)',
+      data: [8, 2, 12, -6],
+      backgroundColor: [COLORS.suncor, COLORS.cnr, COLORS.cenovus, COLORS.imperial],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { ticks: { callback: v => v + 'd' } } },
+    responsive: true
+  }
+});
+
+// 7. EBIT Margin
+new Chart(document.getElementById('ebitMargin'), {
+  type: 'bar',
+  data: {
+    labels: ['Suncor', 'CNR', 'Cenovus', 'Imperial'],
+    datasets: [{
+      label: 'EBIT Margin % (est.)',
+      data: [14.5, 22.0, 12.0, 16.5],
+      backgroundColor: [COLORS.suncor, COLORS.cnr, COLORS.cenovus, COLORS.imperial],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } },
+    responsive: true
+  }
+});
+
+// 8. Radar Chart
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: [
+      'Demand Planning',
+      'Inventory Optim.',
+      'Supplier Collab.',
+      'Mfg. Flexibility',
+      'Logistics & Network',
+      'Digital SC / AI',
+      'Resilience',
+      'Customer Fulfillment'
+    ],
+    datasets: [
+      {
+        label: 'Suncor',
+        data: [7, 7, 8, 8, 9, 6, 8, 9],
+        backgroundColor: 'rgba(0,48,135,0.15)',
+        borderColor: COLORS.suncor,
+        pointBackgroundColor: COLORS.suncor,
+        borderWidth: 2,
+      },
+      {
+        label: 'CNR',
+        data: [6, 8, 6, 7, 6, 6, 8, 5],
+        backgroundColor: 'rgba(232,160,32,0.1)',
+        borderColor: COLORS.cnr,
+        pointBackgroundColor: COLORS.cnr,
+        borderWidth: 2,
+      },
+      {
+        label: 'Cenovus',
+        data: [7, 6, 6, 7, 7, 6, 6, 6],
+        backgroundColor: 'rgba(16,185,129,0.1)',
+        borderColor: COLORS.cenovus,
+        pointBackgroundColor: COLORS.cenovus,
+        borderWidth: 2,
+      },
+      {
+        label: 'Imperial',
+        data: [8, 8, 9, 7, 7, 8, 7, 8],
+        backgroundColor: 'rgba(99,102,241,0.1)',
+        borderColor: COLORS.imperial,
+        pointBackgroundColor: COLORS.imperial,
+        borderWidth: 2,
+      },
+    ]
+  },
+  options: {
+    scales: {
+      r: {
+        min: 0, max: 10,
+        ticks: { stepSize: 2, font: { family: 'Arial', size: 10 } },
+        pointLabels: { font: { family: 'Arial', size: 11 } }
+      }
+    },
+    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Arial', size: 11 } } } },
+    responsive: true
+  }
+});
+</script>
+</body>
+</html>
