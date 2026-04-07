@@ -11,6 +11,7 @@ const navItems = [
   { href: '/workshop', label: 'Workshop' },
   { href: '/simulation', label: 'Simulation' },
   { href: '/export', label: 'Export' },
+  { href: '/audit', label: 'Competitive Audit', alwaysEnabled: true },
 ];
 
 export function NavBar() {
@@ -34,7 +35,7 @@ export function NavBar() {
           <div className="flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
-              const disabled = !assessment && item.href !== '/';
+              const disabled = !assessment && item.href !== '/' && !('alwaysEnabled' in item && item.alwaysEnabled);
               return (
                 <Link
                   key={item.href}

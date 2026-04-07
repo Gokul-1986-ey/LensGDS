@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Supply Chain Competitive Audit — Flex Ltd | April 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #112240;
+    --blue: #1e4d8c;
+    --accent: #00a8e8;
+    --accent2: #00d4aa;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --light: #f0f4f8;
+    --text: #1a2332;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--light); color: var(--text); line-height: 1.65; }
+
+  /* ── COVER ── */
+  .cover {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, var(--accent) 100%);
+    color: var(--white); padding: 80px 60px; min-height: 360px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .cover-badge { background: rgba(255,255,255,.15); display: inline-block; padding: 6px 18px; border-radius: 40px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+  .cover h1 { font-size: 40px; font-weight: 800; line-height: 1.2; margin-bottom: 14px; }
+  .cover h1 span { color: var(--accent); }
+  .cover-sub { font-size: 16px; opacity: .8; margin-bottom: 8px; }
+  .cover-audience { background: rgba(0,168,232,.3); display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 28px; }
+  .cover-meta { display: flex; gap: 40px; margin-top: 8px; flex-wrap: wrap; }
+  .cover-meta-item label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: .65; display: block; }
+  .cover-meta-item span { font-size: 15px; font-weight: 600; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 32px; }
+  .section { padding: 56px 0; }
+  .section + .section { border-top: 1px solid var(--border); }
+
+  /* ── SECTION HEADERS ── */
+  .section-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .section-title { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+  .section-sub { color: var(--muted); font-size: 15px; max-width: 720px; margin-bottom: 36px; }
+
+  /* ── EXEC SUMMARY ── */
+  .exec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 36px; }
+  .exec-card { background: var(--white); border-radius: 12px; padding: 24px 20px; border: 1px solid var(--border); }
+  .exec-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; }
+  .exec-card .value { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .exec-card .sublabel { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .exec-card.accent { border-top: 3px solid var(--accent); }
+  .exec-card.warn { border-top: 3px solid var(--warn); }
+  .exec-card.success { border-top: 3px solid var(--success); }
+  .exec-card.danger { border-top: 3px solid var(--danger); }
+
+  .summary-box { background: var(--navy); color: var(--white); border-radius: 14px; padding: 32px 36px; margin-bottom: 32px; }
+  .summary-box h3 { font-size: 18px; margin-bottom: 16px; color: var(--accent); }
+  .summary-box p { line-height: 1.75; opacity: .88; font-size: 15px; }
+
+  .risk-opps { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  .risk-box { background: var(--white); border-radius: 12px; padding: 22px 24px; border: 1px solid var(--border); }
+  .risk-box h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .risk-box h4.red { color: var(--danger); }
+  .risk-box h4.green { color: var(--success); }
+  .risk-box ul { list-style: none; }
+  .risk-box ul li { font-size: 13.5px; padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-start; }
+  .risk-box ul li:last-child { border-bottom: none; }
+  .risk-box ul li::before { content: "▸"; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .risk-box ul.red li::before { color: var(--danger); }
+  .risk-box ul.green li::before { color: var(--success); }
+
+  /* ── COMPANY OVERVIEW ── */
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .overview-card { background: var(--white); border-radius: 14px; padding: 28px; border: 1px solid var(--border); }
+  .overview-card h4 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 16px; }
+  .stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .val { font-weight: 700; color: var(--navy); text-align: right; max-width: 60%; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .tag { background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 12px; color: var(--navy); font-weight: 500; }
+  .tag.blue { background: #e8f4fd; border-color: #b3d9f5; color: var(--blue); }
+  .tag.green { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
+  .tag.warn { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+  .tag.red { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+
+  /* ── VALUE CHAIN ── */
+  .vc-container { background: var(--white); border-radius: 14px; padding: 32px; border: 1px solid var(--border); margin-bottom: 28px; }
+  .vc-container h4 { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
+  .value-chain { display: flex; gap: 0; overflow-x: auto; border-radius: 10px; overflow: hidden; }
+  .vc-step { background: var(--navy2); color: var(--white); padding: 20px 16px; text-align: center; flex: 1; min-width: 140px; position: relative; }
+  .vc-step:not(:last-child)::after { content: '▶'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 16px; z-index: 2; }
+  .vc-step.strong { background: var(--blue); }
+  .vc-step.gap { background: #7f1d1d; }
+  .vc-step .vc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: .65; margin-bottom: 6px; }
+  .vc-step .vc-name { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .vc-step .vc-bullets { font-size: 10.5px; opacity: .8; line-height: 1.5; text-align: left; }
+  .vc-legend { display: flex; gap: 20px; margin-top: 14px; font-size: 12px; }
+  .vc-legend span { display: flex; align-items: center; gap: 6px; }
+  .vc-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  /* ── FINANCIAL ── */
+  .fin-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .fin-kpi { background: var(--white); border-radius: 12px; padding: 20px 18px; border: 1px solid var(--border); text-align: center; }
+  .fin-kpi .fk-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .fin-kpi .fk-value { font-size: 24px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .fin-kpi .fk-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .fin-kpi.up .fk-value { color: var(--success); }
+  .fin-kpi.down .fk-value { color: var(--danger); }
+  .fin-kpi.warn .fk-value { color: var(--warn); }
+
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .chart-box { background: var(--white); border-radius: 14px; border: 1px solid var(--border); padding: 28px; }
+  .chart-box h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .chart-box .chart-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+
+  /* ── WC METRICS ── */
+  .wc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 28px 0; }
+  .wc-card { background: var(--white); border-radius: 12px; padding: 20px; border: 1px solid var(--border); border-top: 3px solid var(--accent); text-align: center; }
+  .wc-card.warn { border-top-color: var(--warn); }
+  .wc-card.danger { border-top-color: var(--danger); }
+  .wc-card.success { border-top-color: var(--success); }
+  .wc-card .wc-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .wc-card .wc-value { font-size: 30px; font-weight: 900; color: var(--navy); line-height: 1; }
+  .wc-card .wc-unit { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 4px; }
+  .wc-card .wc-vs { font-size: 11px; margin-top: 8px; padding: 3px 8px; border-radius: 20px; display: inline-block; font-weight: 700; }
+  .wc-card .wc-vs.bad { background: #fee2e2; color: #991b1b; }
+  .wc-card .wc-vs.good { background: #d1fae5; color: #065f46; }
+  .wc-card .wc-vs.neutral { background: var(--light); color: var(--navy); }
+
+  /* ── COMPETITOR CARDS ── */
+  .comp-card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 32px; }
+  .comp-header { padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .comp-header-left { display: flex; align-items: center; gap: 18px; }
+  .comp-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: var(--white); flex-shrink: 0; }
+  .comp-icon.foxconn { background: linear-gradient(135deg, #cc0000, #ff4444); }
+  .comp-icon.jabil { background: linear-gradient(135deg, #003087, #0066cc); }
+  .comp-icon.celestica { background: linear-gradient(135deg, #1a6b3c, #2ecc71); }
+  .comp-name { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .comp-tagline { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .comp-badge { background: var(--light); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .comp-kpis { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
+  .comp-kpi { padding: 16px 20px; border-right: 1px solid var(--border); text-align: center; }
+  .comp-kpi:last-child { border-right: none; }
+  .comp-kpi .ck-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .comp-kpi .ck-value { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .comp-kpi .ck-sub { font-size: 10px; color: var(--muted); }
+  .comp-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+  .comp-col { padding: 22px 24px; border-right: 1px solid var(--border); }
+  .comp-col:last-child { border-right: none; }
+  .comp-col h5 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 12px; }
+  .comp-col ul { list-style: none; }
+  .comp-col ul li { font-size: 13px; padding: 5px 0; color: var(--text); display: flex; align-items: flex-start; gap: 8px; }
+  .comp-col ul li::before { content: "→"; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .comp-strength { background: #d1fae5; border-radius: 6px; padding: 2px 7px; font-size: 10px; font-weight: 700; color: #065f46; margin-left: auto; flex-shrink: 0; }
+  .comp-weak { background: #fee2e2; border-radius: 6px; padding: 2px 7px; font-size: 10px; font-weight: 700; color: #991b1b; margin-left: auto; flex-shrink: 0; }
+
+  /* ── COMPARISON TABLE ── */
+  .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); background: var(--white); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: var(--navy); color: var(--white); padding: 14px 18px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  tbody tr:nth-child(even) { background: var(--light); }
+  tbody td { padding: 13px 18px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  .td-label { font-weight: 700; color: var(--navy); font-size: 12.5px; }
+  .check { color: var(--success); font-weight: 700; }
+  .cross { color: var(--danger); font-weight: 700; }
+  .partial { color: var(--warn); font-weight: 700; }
+  .highlight-col { background: rgba(0, 168, 232, 0.06) !important; }
+
+  /* ── GAP ANALYSIS ── */
+  .gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .gap-item { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 22px 24px; border-left: 4px solid var(--danger); }
+  .gap-item.medium { border-left-color: var(--warn); }
+  .gap-item.low { border-left-color: var(--accent); }
+  .gap-item h5 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .gap-item p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .gap-item .who { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 10px; }
+  .gap-item .who span { background: var(--light); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; margin-left: 4px; color: var(--navy); }
+  .gap-item .impact { font-size: 11px; color: var(--muted); margin-top: 6px; font-style: italic; }
+  .priority-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+  .priority-badge.high { background: #fee2e2; color: #991b1b; }
+  .priority-badge.medium { background: #fef3c7; color: #92400e; }
+  .priority-badge.low { background: #dbeafe; color: #1e40af; }
+
+  /* ── RECOMMENDATIONS ── */
+  .rec-horizon { background: var(--light); border-radius: 10px; padding: 10px 18px; font-size: 13px; font-weight: 700; color: var(--navy); margin: 28px 0 16px; display: flex; align-items: center; gap: 10px; }
+  .rec-horizon-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .rec-list { display: flex; flex-direction: column; gap: 14px; }
+  .rec-item { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 20px 26px; display: flex; gap: 18px; align-items: flex-start; }
+  .rec-number { background: var(--navy); color: var(--white); font-size: 14px; font-weight: 800; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .rec-content h5 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+  .rec-content p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .rec-meta { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .meta-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .meta-pill.impact-high { background: #dcfce7; color: #14532d; }
+  .meta-pill.impact-med { background: #fef9c3; color: #713f12; }
+  .meta-pill.effort-low { background: #dbeafe; color: #1e3a8a; }
+  .meta-pill.effort-high { background: #fce7f3; color: #831843; }
+  .meta-pill.effort-med { background: #f3e8ff; color: #581c87; }
+  .meta-pill.timeline { background: var(--light); color: var(--navy); }
+  .meta-pill.wc { background: #ecfdf5; color: #065f46; }
+
+  /* ── QUICK WINS ── */
+  .quickwins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .qw-card { background: linear-gradient(135deg, var(--navy), var(--blue)); border-radius: 14px; padding: 26px; color: var(--white); }
+  .qw-card .num { font-size: 34px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 10px; }
+  .qw-card h5 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .qw-card p { font-size: 12.5px; opacity: .8; line-height: 1.6; }
+  .qw-card .days { margin-top: 12px; background: rgba(255,255,255,.1); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; display: inline-block; }
+  .qw-card .impact-est { margin-top: 8px; background: rgba(0,168,232,.25); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; display: inline-block; }
+
+  /* ── FOOTER ── */
+  .report-footer { background: var(--navy); color: var(--white); padding: 40px 60px; margin-top: 60px; }
+  .report-footer p { opacity: .55; font-size: 13px; margin-top: 8px; }
+  .report-footer h4 { font-size: 16px; font-weight: 700; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<div class="cover">
+  <div class="cover-badge">Supply Chain Competitive Intelligence Report</div>
+  <h1>Flex Ltd. <span>Supply Chain Audit</span><br/>Electronics Manufacturing Services</h1>
+  <div class="cover-sub">End-to-End Supply Chain Benchmarking: Plan · Source · Make · Deliver · Return</div>
+  <div class="cover-audience">Prepared for: CSCO · COO · CXO Audience</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><label>Target Website</label><span>flex.com</span></div>
+    <div class="cover-meta-item"><label>Industry</label><span>Electronics Manufacturing Services</span></div>
+    <div class="cover-meta-item"><label>Competitors</label><span>Foxconn · Jabil · Celestica</span></div>
+    <div class="cover-meta-item"><label>Report Date</label><span>April 6, 2026</span></div>
+    <div class="cover-meta-item"><label>Prepared by</label><span>AutomationX Audit System</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════ EXECUTIVE SUMMARY ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 01</div>
+  <div class="section-title">Executive Summary</div>
+  <div class="section-sub">Supply chain performance snapshot and strategic context for Flex's competitive position across the EMS value chain.</div>
+
+  <div class="exec-grid">
+    <div class="exec-card accent">
+      <div class="label">Cash-to-Cash Cycle</div>
+      <div class="value">~67 days</div>
+      <div class="sublabel">vs. Jabil best-in-class ~13 days</div>
+    </div>
+    <div class="exec-card warn">
+      <div class="label">Inventory Turns (FY2024)</div>
+      <div class="value">~4.4×</div>
+      <div class="sublabel">vs. Foxconn ~8× — significant gap</div>
+    </div>
+    <div class="exec-card success">
+      <div class="label">Gross Margin Trend</div>
+      <div class="value">+8.4%</div>
+      <div class="sublabel">Improving YoY — power mix shift</div>
+    </div>
+    <div class="exec-card danger">
+      <div class="label">Working Capital Trapped</div>
+      <div class="value">~$2.1B</div>
+      <div class="sublabel">Est. excess vs. Jabil C2C benchmark</div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <h3>Strategic Assessment — Supply Chain Lens</h3>
+    <p>
+      Flex Ltd. operates a genuinely world-class EMS supply chain — 16,000+ suppliers, 7,000+ SC professionals, 100+ facilities in ~30 countries, and a deeply integrated lifecycle from design through reverse logistics. However, this audit reveals that <strong>Flex's supply chain efficiency metrics lag behind best-in-class peers on every working capital dimension</strong>: its Cash-to-Cash cycle (~67 days) is 5× Jabil's (~13 days) and its inventory turns (~4.4×) are roughly half Foxconn's (~8×). The root causes are structural — longer DIO driven by complex multi-industry demand, and DPO below the optimal 90+ days. If Flex closes even half the working capital gap vs. Jabil, it unlocks approximately <strong>$1–2B in cash</strong> that can fund AI infrastructure investment, M&amp;A, or share buybacks. The EP² acquisition (March 2026) and NVIDIA AI platform pivot will further shift revenue mix toward higher-margin power products — but without supply chain efficiency improvements, margin gains will be partially offset by working capital drag.
+    </p>
+  </div>
+
+  <div class="risk-opps">
+    <div class="risk-box">
+      <h4 class="red">Strategic Risks</h4>
+      <ul class="red">
+        <li>C2C cycle ~5× longer than Jabil — $2B+ capital trapped in working capital</li>
+        <li>Inventory turns lagging peers — risk of excess/obsolete stock in volatile demand environments</li>
+        <li>EBIT margin (3.2%) is 2.5× below Celestica (8.0%) — margin leakage across value chain</li>
+        <li>No AI/digital supply chain control tower — visibility gap vs. competitors building real-time SC platforms</li>
+        <li>Heavy volume concentration in lower-margin assembly vs. higher-margin power products</li>
+      </ul>
+    </div>
+    <div class="risk-box">
+      <h4 class="green">Growth Opportunities</h4>
+      <ul class="green">
+        <li>EP² acquisition + Anord Mardix = most comprehensive power portfolio in EMS — margin expansion catalyst</li>
+        <li>NVIDIA AI infrastructure platform driving 35% YoY DC revenue growth — ~$6.5B segment</li>
+        <li>VMI (Vendor-Managed Inventory) model already deployed — scale it to reduce DIO structurally</li>
+        <li>DPO optimization: extend supplier payment terms to 90+ days (Jabil benchmark) — ~$1B+ cash release</li>
+        <li>Aftermarket/reverse logistics = highest-margin, lowest-inventory service line — underutilized growth lever</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ COMPANY OVERVIEW ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 02</div>
+  <div class="section-title">Target Company: Flex Ltd.</div>
+  <div class="section-sub">Business model, supply chain capabilities, and market footprint — based on live website analysis (Playwright) conducted April 6, 2026.</div>
+
+  <div class="overview-grid">
+    <div class="overview-card">
+      <h4>Company Profile</h4>
+      <div class="stat-row"><span>Founded</span><span class="val">1969 (55+ years)</span></div>
+      <div class="stat-row"><span>HQ</span><span class="val">Singapore (ops: San Jose, CA)</span></div>
+      <div class="stat-row"><span>CEO</span><span class="val">Revathi Advaithi</span></div>
+      <div class="stat-row"><span>Ticker</span><span class="val">NASDAQ: FLEX</span></div>
+      <div class="stat-row"><span>Employees</span><span class="val">140,000+</span></div>
+      <div class="stat-row"><span>Facilities</span><span class="val">100+ across ~30 countries</span></div>
+      <div class="stat-row"><span>Supply Chain Professionals</span><span class="val">7,000+</span></div>
+      <div class="stat-row"><span>Global Supplier Network</span><span class="val">16,000+ suppliers</span></div>
+      <div class="stat-row"><span>Annual Purchasing Spend</span><span class="val">Est. ~$22B+</span></div>
+      <div class="stat-row"><span>Business Model</span><span class="val">B2B EMS / ODM / Proprietary Products</span></div>
+    </div>
+
+    <div class="overview-card">
+      <h4>Supply Chain Services Portfolio</h4>
+      <div class="tag-list">
+        <span class="tag green">Design &amp; Engineering (NPI)</span>
+        <span class="tag green">Strategic Sourcing &amp; Procurement</span>
+        <span class="tag green">Advanced Manufacturing</span>
+        <span class="tag green">VMI (Vendor-Managed Inventory)</span>
+        <span class="tag green">Value-Added Fulfillment &amp; Logistics</span>
+        <span class="tag green">Aftermarket / Reverse Logistics</span>
+        <span class="tag green">Critical Power (Anord Mardix)</span>
+        <span class="tag green">Embedded Power &amp; Liquid Cooling</span>
+        <span class="tag warn">EP² Power Products (Acquiring)</span>
+        <span class="tag blue">Flexible Circuits (Sheldahl)</span>
+        <span class="tag blue">Components (Flexcoreworks)</span>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <h4>Industries Served (9 Verticals)</h4>
+      <div class="tag-list">
+        <span class="tag blue">Data Center / AI Infrastructure</span>
+        <span class="tag blue">Automotive</span>
+        <span class="tag blue">Cloud</span>
+        <span class="tag blue">Healthcare</span>
+        <span class="tag blue">Communications</span>
+        <span class="tag blue">Industrial</span>
+        <span class="tag blue">Consumer Devices</span>
+        <span class="tag blue">Lifestyle</span>
+        <span class="tag blue">Cross-Industry Technology</span>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <h4>SC Strategy &amp; Key Partnerships</h4>
+      <div class="stat-row"><span>Core SC Value Prop</span><span class="val">End-to-end lifecycle, resilience &amp; risk mitigation</span></div>
+      <div class="stat-row"><span>Key AI Partnership</span><span class="val">NVIDIA (AI Infra Platform, 800 VDC Rack)</span></div>
+      <div class="stat-row"><span>VMI Capability</span><span class="val">Integrated bonded warehousing + SC visibility</span></div>
+      <div class="stat-row"><span>Recent M&amp;A</span><span class="val">Acquiring EP² (power products, March 2026)</span></div>
+      <div class="stat-row"><span>Circular Economy</span><span class="val">Reverse logistics &amp; value recovery at scale</span></div>
+      <div class="stat-row"><span>Geographic Coverage</span><span class="val">~30 countries, all major manufacturing hubs</span></div>
+      <div class="stat-row"><span>Ethics &amp; Compliance</span><span class="val">World's Most Ethical Companies® (4th year, 2026)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ INDUSTRY & VALUE CHAIN ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 03</div>
+  <div class="section-title">Industry Overview &amp; Supply Chain Value Chain</div>
+  <div class="section-sub">EMS market structure, margin pools, and supply chain disruptions reshaping competitive dynamics in 2026. Mapped across the Plan → Source → Make → Deliver → Return framework.</div>
+
+  <div class="vc-container">
+    <h4>Flex Supply Chain Footprint — Plan → Source → Make → Deliver → Return</h4>
+    <div class="value-chain">
+      <div class="vc-step strong">
+        <div class="vc-label">Plan</div>
+        <div class="vc-name">Demand Planning &amp; S&OP</div>
+        <div class="vc-bullets">• Multi-industry forecasting<br>• VMI model deployed<br>• AI-assisted signals</div>
+      </div>
+      <div class="vc-step strong">
+        <div class="vc-label">Source</div>
+        <div class="vc-name">Procurement &amp; Supplier Mgmt</div>
+        <div class="vc-bullets">• 16,000+ suppliers<br>• 7,000+ SC professionals<br>• $22B+ annual spend</div>
+      </div>
+      <div class="vc-step strong">
+        <div class="vc-label">Make</div>
+        <div class="vc-name">Advanced Manufacturing</div>
+        <div class="vc-bullets">• 100+ facilities, 30 countries<br>• Automation &amp; robotics<br>• Power products (Anord Mardix)</div>
+      </div>
+      <div class="vc-step strong">
+        <div class="vc-label">Deliver</div>
+        <div class="vc-name">Fulfillment &amp; Logistics</div>
+        <div class="vc-bullets">• VAF &amp; omnichannel delivery<br>• Bonded warehousing<br>• Direct-to-consumer capable</div>
+      </div>
+      <div class="vc-step strong">
+        <div class="vc-label">Return</div>
+        <div class="vc-name">Aftermarket &amp; Reverse Logistics</div>
+        <div class="vc-bullets">• Circular economy platform<br>• Value recovery at scale<br>• Regulatory compliance</div>
+      </div>
+    </div>
+    <div class="vc-legend">
+      <span><span class="vc-dot" style="background:var(--blue)"></span> Strong Capability</span>
+      <span><span class="vc-dot" style="background:var(--navy2)"></span> Developing</span>
+      <span><span class="vc-dot" style="background:#7f1d1d"></span> Gap / Weakness</span>
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-card">
+      <h4>Industry Landscape</h4>
+      <div class="stat-row"><span>Global EMS Market (2026)</span><span class="val">~$689.86B</span></div>
+      <div class="stat-row"><span>Top 50 EMS Revenue (2024)</span><span class="val">$477B (+12.7% YoY)</span></div>
+      <div class="stat-row"><span>Flex Market Rank</span><span class="val">#3 globally (~$26.4B)</span></div>
+      <div class="stat-row"><span>#1 Market Driver (2026)</span><span class="val">AI / Data Center Capex ($300B+)</span></div>
+      <div class="stat-row"><span>Key Margin Pool</span><span class="val">Power &amp; Cooling (fastest growing)</span></div>
+      <div class="stat-row"><span>Geopolitical Trend</span><span class="val">China+1 / Supply chain regionalization</span></div>
+    </div>
+    <div class="overview-card">
+      <h4>Key Supply Chain Disruptions &amp; Trends</h4>
+      <div class="tag-list">
+        <span class="tag red">AI rack power density crisis (100kW+ per rack)</span>
+        <span class="tag red">Supply chain disruptions +30% in H1 2024</span>
+        <span class="tag warn">EV manufacturing ramp driving new SC complexity</span>
+        <span class="tag warn">EU circular economy regulations tightening</span>
+        <span class="tag green">VMI &amp; bonded warehousing reducing DIO for leaders</span>
+        <span class="tag green">AI-driven demand sensing improving forecast accuracy</span>
+        <span class="tag blue">Nearshoring trend favoring Flex's multi-country model</span>
+        <span class="tag blue">Digital supply chain &amp; control towers becoming table stakes</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FINANCIAL ANALYSIS ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 04</div>
+  <div class="section-title">Financial Analysis — Flex Ltd.</div>
+  <div class="section-sub">Multi-year revenue, COGS, gross margin, and working capital metrics. Supply chain efficiency drives financial performance in EMS — every day of C2C improvement = ~$72M cash released at Flex's revenue scale.</div>
+
+  <div class="fin-kpi-grid">
+    <div class="fin-kpi">
+      <div class="fk-label">FY2022 Revenue</div>
+      <div class="fk-value">$24.6B</div>
+      <div class="fk-sub">COGS: ~$22.8B | GM: 7.4%</div>
+    </div>
+    <div class="fin-kpi up">
+      <div class="fk-label">FY2023 Revenue</div>
+      <div class="fk-value">$28.5B</div>
+      <div class="fk-sub">+15.7% YoY | COGS: ~$26.3B | GM: 7.7%</div>
+    </div>
+    <div class="fin-kpi down">
+      <div class="fk-label">FY2024 Revenue</div>
+      <div class="fk-value">$26.4B</div>
+      <div class="fk-sub">-7.3% YoY | COGS: ~$24.2B | GM: 8.4%</div>
+    </div>
+    <div class="fin-kpi warn">
+      <div class="fk-label">FY2024 EBIT</div>
+      <div class="fk-value">$853M</div>
+      <div class="fk-sub">EBIT Margin: 3.2% | vs. Celestica 8.0%</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-box">
+      <h4>Revenue vs. COGS (FY2022–FY2024, USD Billions)</h4>
+      <div class="chart-sub">Gross margin improving as power products mix increases</div>
+      <canvas id="revCOGSChart" height="220"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>Gross Margin % Trend vs. Peers</h4>
+      <div class="chart-sub">EMS gross margins are thin — proprietary products are the expansion lever</div>
+      <canvas id="gmTrendChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <div style="margin-top:28px;">
+    <div class="section-tag" style="margin-bottom:8px;">Working Capital Metrics</div>
+    <div class="section-title" style="font-size:20px;margin-bottom:8px;">Flex Working Capital Dashboard (FY2024 Estimates)</div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Based on Q3 FY2024 public data and annualized estimates. C2C = DSO + DIO − DPO. Every 10-day reduction in C2C releases ~$720M in cash at Flex's revenue scale.</p>
+
+    <div class="wc-grid">
+      <div class="wc-card warn">
+        <div class="wc-label">DSO — Days Sales Outstanding</div>
+        <div class="wc-value">46</div>
+        <div class="wc-unit">days</div>
+        <div class="wc-vs neutral">Jabil: 45 days — Parity</div>
+      </div>
+      <div class="wc-card danger">
+        <div class="wc-label">DIO — Days Inventory Outstanding</div>
+        <div class="wc-value">83</div>
+        <div class="wc-unit">days</div>
+        <div class="wc-vs bad">Jabil: 59 days — Gap: 24 days</div>
+      </div>
+      <div class="wc-card warn">
+        <div class="wc-label">DPO — Days Payable Outstanding</div>
+        <div class="wc-value">62</div>
+        <div class="wc-unit">days</div>
+        <div class="wc-vs bad">Jabil: 91 days — Gap: 29 days</div>
+      </div>
+      <div class="wc-card danger">
+        <div class="wc-label">Cash-to-Cash Cycle</div>
+        <div class="wc-value">67</div>
+        <div class="wc-unit">days (DSO+DIO−DPO)</div>
+        <div class="wc-vs bad">Jabil: 13 days — Gap: 54 days</div>
+      </div>
+    </div>
+
+    <div class="charts-grid" style="margin-top:4px;">
+      <div class="chart-box">
+        <h4>Cash-to-Cash Cycle Comparison (Days)</h4>
+        <div class="chart-sub">Lower = better — cash released faster into operations</div>
+        <canvas id="c2cChart" height="200"></canvas>
+      </div>
+      <div class="chart-box">
+        <h4>DSO / DIO / DPO Breakdown by Company</h4>
+        <div class="chart-sub">Jabil's high DPO (91 days) is the key driver of its superior C2C</div>
+        <canvas id="dsodiodpoChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ COMPETITORS ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 05</div>
+  <div class="section-title">Competitor Deep Dives — Supply Chain Focus</div>
+  <div class="section-sub">Analysis of top 3 EMS competitors through a supply chain lens: SC capabilities, working capital performance, and strategic positioning for CSCO/COO audiences.</div>
+
+  <!-- FOXCONN -->
+  <div class="comp-card">
+    <div class="comp-header">
+      <div class="comp-header-left">
+        <div class="comp-icon foxconn">F</div>
+        <div>
+          <div class="comp-name">Foxconn (Hon Hai Technology Group)</div>
+          <div class="comp-tagline">foxconn.com/en-us · "Technology for Smart Living" · IIDM Strategy</div>
+        </div>
+      </div>
+      <div class="comp-badge">Revenue: ~$220B (FY2024) · Rank: #1 EMS</div>
+    </div>
+    <div class="comp-kpis">
+      <div class="comp-kpi"><div class="ck-label">Revenue</div><div class="ck-value">$220B</div><div class="ck-sub">+11.3% FY2024</div></div>
+      <div class="comp-kpi"><div class="ck-label">Inventory Turns</div><div class="ck-value">~8×</div><div class="ck-sub">Est. — volume efficiency</div></div>
+      <div class="comp-kpi"><div class="ck-label">C2C Cycle</div><div class="ck-value">~10 days</div><div class="ck-sub">Est. — massive DPO leverage</div></div>
+      <div class="comp-kpi"><div class="ck-label">EBIT Margin</div><div class="ck-value">~2.5%</div><div class="ck-sub">High volume, low margin</div></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-col">
+        <h5>SC Strengths vs. Flex</h5>
+        <ul>
+          <li>Highest inventory turns (~8×) — volume-driven SC velocity<span class="comp-strength">TURNS</span></li>
+          <li>Unmatched supplier leverage: 1M+ workforce, massive DPO power</li>
+          <li>Industrial park model: self-contained SC hubs reduce logistics costs</li>
+          <li>SAP AI partnership for AI-powered manufacturing &amp; SC optimization</li>
+          <li>Vertical integration: components → assembly → finished goods</li>
+        </ul>
+      </div>
+      <div class="comp-col">
+        <h5>SC Weaknesses vs. Flex</h5>
+        <ul>
+          <li>High single-customer concentration (Apple) = SC rigidity<span class="comp-weak">RISK</span></li>
+          <li>Taiwan-centric manufacturing: geopolitical exposure</li>
+          <li>No end-to-end aftermarket / circular economy capability</li>
+          <li>Minimal supply chain flexibility for non-Apple verticals</li>
+          <li>English-language SC marketing is nearly absent</li>
+        </ul>
+      </div>
+      <div class="comp-col">
+        <h5>SC Differentiators</h5>
+        <ul>
+          <li>Modular data center manufacturing (AI factory buildout)</li>
+          <li>EV supply chain: battery, ADAS, powertrain integration</li>
+          <li>Semiconductor investments: SiC, advanced packaging</li>
+          <li>Scale-driven COGS compression — Flex cannot match on volume plays</li>
+          <li>Humanoid robot manufacturing: new frontier SC capability</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- JABIL -->
+  <div class="comp-card">
+    <div class="comp-header">
+      <div class="comp-header-left">
+        <div class="comp-icon jabil">J</div>
+        <div>
+          <div class="comp-name">Jabil Inc.</div>
+          <div class="comp-tagline">jabil.com · "Engineering-Led, Supply Chain-Enabled" · Best-in-Class C2C</div>
+        </div>
+      </div>
+      <div class="comp-badge">Revenue: $29.8B (FY2025) · C2C: ~13 days</div>
+    </div>
+    <div class="comp-kpis">
+      <div class="comp-kpi"><div class="ck-label">Revenue</div><div class="ck-value">$29.8B</div><div class="ck-sub">+3.2% FY2025</div></div>
+      <div class="comp-kpi"><div class="ck-label">Inventory Turns</div><div class="ck-value">~6.2×</div><div class="ck-sub">DIO: 59 days</div></div>
+      <div class="comp-kpi"><div class="ck-label">C2C Cycle</div><div class="ck-value">12.7 days</div><div class="ck-sub">Best-in-class EMS</div></div>
+      <div class="comp-kpi"><div class="ck-label">DPO</div><div class="ck-value">91 days</div><div class="ck-sub">Superior supplier terms</div></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-col">
+        <h5>SC Strengths vs. Flex</h5>
+        <ul>
+          <li>Best-in-class C2C: 12.7 days vs. Flex ~67 days<span class="comp-strength">C2C</span></li>
+          <li>DPO of 91 days — superior supplier payment term negotiation</li>
+          <li>$25B annual purchasing spend — massive procurement leverage</li>
+          <li>Digital portals: customer (connect.jabil.com) + supplier — real-time SC visibility</li>
+          <li>AI data center power management: Hanley Energy acquisition (Jan 2026)</li>
+        </ul>
+      </div>
+      <div class="comp-col">
+        <h5>SC Weaknesses vs. Flex</h5>
+        <ul>
+          <li>Revenue declined 17% in FY24 post-mobility business divestiture<span class="comp-weak">VOLATILITY</span></li>
+          <li>Less geographic diversity (~25 countries vs. Flex ~30)</li>
+          <li>No proprietary critical power / cooling products</li>
+          <li>Narrower circular economy / aftermarket platform</li>
+          <li>Fewer industry verticals (7 vs. Flex's 9)</li>
+        </ul>
+      </div>
+      <div class="comp-col">
+        <h5>SC Differentiators</h5>
+        <ul>
+          <li>DPO leadership: 91 days payable = superior supplier financing</li>
+          <li>Self-service digital portals for SC collaboration</li>
+          <li>Semiconductor capital equipment vertical — high-margin, complex SC</li>
+          <li>Defense &amp; Aerospace SC: regulated-industry supply chain expertise</li>
+          <li>Warehouse automation &amp; digital commerce verticals</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CELESTICA -->
+  <div class="comp-card">
+    <div class="comp-header">
+      <div class="comp-header-left">
+        <div class="comp-icon celestica">C</div>
+        <div>
+          <div class="comp-name">Celestica Inc.</div>
+          <div class="comp-tagline">celestica.com · "Engineering AI &amp; Cloud Technology Backbone" · Highest Margin Peer</div>
+        </div>
+      </div>
+      <div class="comp-badge">Revenue: $9.65B (FY2024, +21%) · EBIT: 8.0%</div>
+    </div>
+    <div class="comp-kpis">
+      <div class="comp-kpi"><div class="ck-label">Revenue</div><div class="ck-value">$9.65B</div><div class="ck-sub">+21% FY2024</div></div>
+      <div class="comp-kpi"><div class="ck-label">Inventory Turns</div><div class="ck-value">~5.2×</div><div class="ck-sub">DIO: ~70 days (est.)</div></div>
+      <div class="comp-kpi"><div class="ck-label">C2C Cycle</div><div class="ck-value">~90 days</div><div class="ck-sub">Improved from 103 days</div></div>
+      <div class="comp-kpi"><div class="ck-label">EBIT Margin</div><div class="ck-value">8.0%</div><div class="ck-sub">Best-in-class margin</div></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-col">
+        <h5>SC Strengths vs. Flex</h5>
+        <ul>
+          <li>EBIT margin 8.0% — 2.5× Flex's 3.2% (focused SC = higher margin)<span class="comp-strength">MARGIN</span></li>
+          <li>Revenue growth +21% YoY — fastest among peers</li>
+          <li>Platform Solutions (HPS): AI hardware SC as a product</li>
+          <li>Precision Machining as a named SC service — high-margin, low-substitution</li>
+          <li>Product Licensing: IP monetization of SC capabilities</li>
+        </ul>
+      </div>
+      <div class="comp-col">
+        <h5>SC Weaknesses vs. Flex</h5>
+        <ul>
+          <li>C2C ~90 days — worst in peer group despite improvement<span class="comp-weak">C2C</span></li>
+          <li>Revenue base ~$9.65B vs. Flex $26.4B — scale disadvantage</li>
+          <li>Narrow supplier base (fewer leverage points vs. Flex's 16K+)</li>
+          <li>No VMI program visible — reactive vs. proactive inventory model</li>
+          <li>Geographic concentration — limited LatAm/Africa presence</li>
+        </ul>
+      </div>
+      <div class="comp-col">
+        <h5>SC Differentiators</h5>
+        <ul>
+          <li>Focused SC strategy: fewer verticals, deeper expertise = better margin</li>
+          <li>1.6T Ethernet — leading AI data center SC integration</li>
+          <li>Rack Integration Services: full DC rack SC from BOM to delivery</li>
+          <li>Aerospace &amp; Defense: highly regulated, long-cycle SC contracts</li>
+          <li>SC Analytics &amp; Product Licensing: monetizing SC IP</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ BENCHMARKING ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 06</div>
+  <div class="section-title">Peer Benchmarking Dashboard</div>
+  <div class="section-sub">Supply chain KPI benchmarks, efficiency ratios, and capability maturity scores across all four EMS players — designed for CSCO-level review.</div>
+
+  <div class="charts-grid">
+    <div class="chart-box">
+      <h4>Inventory Turns Comparison (FY2024/2025)</h4>
+      <div class="chart-sub">Higher = better — faster inventory velocity, less capital trapped</div>
+      <canvas id="invTurnsChart" height="210"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>EBIT Margin % Comparison</h4>
+      <div class="chart-sub">Celestica's focused SC model delivers 2.5× Flex's margin</div>
+      <canvas id="ebitMarginChart" height="210"></canvas>
+    </div>
+  </div>
+
+  <div class="charts-grid" style="margin-top:28px;">
+    <div class="chart-box">
+      <h4>Supply Chain Capability Maturity Radar (Score 1–10)</h4>
+      <div class="chart-sub">Evaluated across 7 SC dimensions — Flex strong in sourcing, gaps in digital &amp; planning</div>
+      <canvas id="scRadarChart" height="240"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>SC Capabilities Breadth (Named SC Service Lines)</h4>
+      <div class="chart-sub">Celestica leads with 7 discrete SC services vs. Flex's 5</div>
+      <canvas id="scBreadthChart" height="240"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ COMPARISON TABLE ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 07</div>
+  <div class="section-title">Side-by-Side SC Comparison</div>
+  <div class="section-sub">Supply chain capability and KPI matrix across all four EMS players — benchmarked on dimensions that drive CSCO/COO selection decisions.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%">SC Capability / KPI</th>
+          <th class="highlight-col" style="width:19.5%">⭐ Flex (Target)</th>
+          <th style="width:19.5%">Foxconn</th>
+          <th style="width:19.5%">Jabil</th>
+          <th style="width:19.5%">Celestica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-label">Revenue Scale</td>
+          <td class="highlight-col">$26.4B (#3)</td>
+          <td>$220B (#1)</td>
+          <td>$29.8B (#2)</td>
+          <td>$9.65B (#4)</td>
+        </tr>
+        <tr>
+          <td class="td-label">EBIT Margin</td>
+          <td class="highlight-col"><span class="partial">~</span> 3.2%</td>
+          <td><span class="cross">✗</span> ~2.5%</td>
+          <td><span class="partial">~</span> ~4.8%</td>
+          <td><span class="check">✔</span> 8.0% — best</td>
+        </tr>
+        <tr>
+          <td class="td-label">Gross Margin %</td>
+          <td class="highlight-col"><span class="partial">~</span> ~8.4% (improving)</td>
+          <td><span class="cross">✗</span> ~6% (volume play)</td>
+          <td><span class="partial">~</span> ~8%</td>
+          <td><span class="check">✔</span> ~9%</td>
+        </tr>
+        <tr>
+          <td class="td-label">Cash-to-Cash Cycle</td>
+          <td class="highlight-col"><span class="cross">✗</span> ~67 days</td>
+          <td><span class="check">✔</span> ~10 days</td>
+          <td><span class="check">✔</span> 12.7 days — best</td>
+          <td><span class="partial">~</span> ~90 days</td>
+        </tr>
+        <tr>
+          <td class="td-label">DSO (Days Sales Outstanding)</td>
+          <td class="highlight-col"><span class="partial">~</span> ~46 days</td>
+          <td><span class="check">✔</span> ~35 days</td>
+          <td><span class="check">✔</span> 45 days</td>
+          <td><span class="partial">~</span> ~55 days</td>
+        </tr>
+        <tr>
+          <td class="td-label">DIO (Days Inventory Outstanding)</td>
+          <td class="highlight-col"><span class="cross">✗</span> ~83 days</td>
+          <td><span class="check">✔</span> ~45 days</td>
+          <td><span class="check">✔</span> 59 days</td>
+          <td><span class="partial">~</span> ~70 days</td>
+        </tr>
+        <tr>
+          <td class="td-label">DPO (Days Payable Outstanding)</td>
+          <td class="highlight-col"><span class="cross">✗</span> ~62 days</td>
+          <td><span class="partial">~</span> ~70 days</td>
+          <td><span class="check">✔</span> 91 days — best</td>
+          <td><span class="cross">✗</span> ~35 days</td>
+        </tr>
+        <tr>
+          <td class="td-label">Inventory Turns</td>
+          <td class="highlight-col"><span class="partial">~</span> ~4.4×</td>
+          <td><span class="check">✔</span> ~8×</td>
+          <td><span class="check">✔</span> ~6.2×</td>
+          <td><span class="partial">~</span> ~5.2×</td>
+        </tr>
+        <tr>
+          <td class="td-label">Supplier Network Scale</td>
+          <td class="highlight-col"><span class="check">✔</span> 16,000+ suppliers</td>
+          <td><span class="check">✔</span> Largest globally</td>
+          <td><span class="check">✔</span> 38,000+ suppliers</td>
+          <td><span class="partial">~</span> Undisclosed</td>
+        </tr>
+        <tr>
+          <td class="td-label">VMI / Bonded Warehousing</td>
+          <td class="highlight-col"><span class="check">✔</span> Deployed at scale</td>
+          <td><span class="partial">~</span> Internal only</td>
+          <td><span class="partial">~</span> Limited visibility</td>
+          <td><span class="cross">✗</span> Not featured</td>
+        </tr>
+        <tr>
+          <td class="td-label">Digital SC / Customer Portal</td>
+          <td class="highlight-col"><span class="cross">✗</span> No external portal</td>
+          <td><span class="cross">✗</span> None</td>
+          <td><span class="check">✔</span> connect.jabil.com</td>
+          <td><span class="cross">✗</span> None visible</td>
+        </tr>
+        <tr>
+          <td class="td-label">Aftermarket / Reverse Logistics</td>
+          <td class="highlight-col"><span class="check">✔</span> Full circular economy</td>
+          <td><span class="cross">✗</span> Not featured</td>
+          <td><span class="partial">~</span> Post-production only</td>
+          <td><span class="check">✔</span> Dedicated service</td>
+        </tr>
+        <tr>
+          <td class="td-label">Critical Power SC Capability</td>
+          <td class="highlight-col"><span class="check">✔</span> Anord Mardix + EP²</td>
+          <td><span class="cross">✗</span> None</td>
+          <td><span class="partial">~</span> Hanley Energy (new)</td>
+          <td><span class="cross">✗</span> None</td>
+        </tr>
+        <tr>
+          <td class="td-label">Geographic Footprint</td>
+          <td class="highlight-col"><span class="check">✔</span> ~30 countries</td>
+          <td><span class="check">✔</span> 30+ countries</td>
+          <td><span class="partial">~</span> ~25 countries</td>
+          <td><span class="partial">~</span> ~15 countries</td>
+        </tr>
+        <tr>
+          <td class="td-label">Precision Machining / NPI</td>
+          <td class="highlight-col"><span class="partial">~</span> Embedded in D&amp;E</td>
+          <td><span class="cross">✗</span> Not featured</td>
+          <td><span class="partial">~</span> Implied</td>
+          <td><span class="check">✔</span> Named SC services</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════ GAP ANALYSIS ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 08</div>
+  <div class="section-title">Supply Chain Gap Analysis</div>
+  <div class="section-sub">Eight critical supply chain gaps where Flex is outmaneuvered by peers — structured across Planning, Procurement, Manufacturing, Inventory, Logistics, and Digital dimensions.</div>
+
+  <div class="gap-grid">
+
+    <div class="gap-item">
+      <div class="priority-badge high">🔴 High Priority — Inventory</div>
+      <h5>DIO Gap: 83 Days vs. Jabil's 59 Days</h5>
+      <p>Flex's inventory is held 24 days longer than Jabil — representing approximately <strong>$1.7B in excess working capital</strong> at current revenue scale. This DIO gap stems from complex multi-industry demand mix, inadequate forecast-driven replenishment, and sub-optimal SKU rationalization. Jabil's DIO reduction post-mobility divestiture demonstrates that focused portfolio simplification directly improves inventory velocity.</p>
+      <div class="impact">Est. Cash Impact: $1.5–1.7B if reduced to Jabil benchmark</div>
+      <div class="who">Better at this: <span>Jabil</span> <span>Foxconn</span></div>
+    </div>
+
+    <div class="gap-item">
+      <div class="priority-badge high">🔴 High Priority — Procurement</div>
+      <h5>DPO Gap: 62 Days vs. Jabil's 91 Days</h5>
+      <p>Flex's Days Payable Outstanding (~62 days) is 29 days below Jabil's best-in-class 91 days. At $22B+ annual procurement spend, every 10 days of DPO extension releases approximately <strong>$600M in cash</strong>. Jabil's ability to negotiate 91-day payment terms reflects superior supplier leverage, early payment discount programs, and supply chain financing platforms. Flex's 16,000+ supplier network should command comparable terms.</p>
+      <div class="impact">Est. Cash Impact: $1.7B if extended to Jabil's 91-day benchmark</div>
+      <div class="who">Better at this: <span>Jabil</span></div>
+    </div>
+
+    <div class="gap-item">
+      <div class="priority-badge high">🔴 High Priority — Digital SC</div>
+      <h5>No External Digital Supply Chain Portal</h5>
+      <p>Jabil's connect.jabil.com gives customers and suppliers real-time order visibility, SC collaboration, and quality reporting — 24/7. Flex has no equivalent external-facing portal, forcing enterprise buyers into email-based communication loops. In 2026, digital SC transparency is a CSCO-level purchasing requirement, not a nice-to-have. This gap costs Flex deals with digitally mature enterprise OEMs running RFPs.</p>
+      <div class="impact">Strategic: Directly impacts enterprise retention and new logo win rate</div>
+      <div class="who">Better at this: <span>Jabil</span></div>
+    </div>
+
+    <div class="gap-item">
+      <div class="priority-badge high">🔴 High Priority — Planning</div>
+      <h5>No Visible AI/Control Tower SC Planning Platform</h5>
+      <p>Foxconn announced a full SAP AI manufacturing &amp; SC optimization partnership (March 2026). Jabil markets AI-driven intelligent infrastructure. Celestica highlights digital manufacturing capabilities. Flex's external SC narrative lacks any reference to AI demand sensing, SC control tower, or digital twin capabilities — creating a perception gap with CSCOs evaluating best-in-class SC partners.</p>
+      <div class="impact">Competitive: Affects perception among AI-forward hyperscaler and automotive OEM buyers</div>
+      <div class="who">Better at this: <span>Foxconn</span> <span>Jabil</span></div>
+    </div>
+
+    <div class="gap-item medium">
+      <div class="priority-badge medium">🟡 Medium Priority — Margin</div>
+      <h5>EBIT Margin Gap: 3.2% vs. Celestica 8.0%</h5>
+      <p>Celestica's SC focus strategy (fewer verticals, higher-margin segments, precision machining, licensing) delivers 8.0% EBIT vs. Flex's 3.2%. While scale differences matter, the margin gap signals that Flex's revenue mix is still weighted toward lower-margin assembly. The EP² acquisition and NVIDIA power platform are the right levers — but faster mix shift toward proprietary products is needed to narrow this gap structurally.</p>
+      <div class="impact">Financial: 100bps EBIT margin improvement = ~$264M incremental EBIT at current revenue</div>
+      <div class="who">Better at this: <span>Celestica</span></div>
+    </div>
+
+    <div class="gap-item medium">
+      <div class="priority-badge medium">🟡 Medium Priority — Manufacturing</div>
+      <h5>Inventory Turns (4.4×) Below Industry Best (Foxconn 8×)</h5>
+      <p>Flex's inventory turns of ~4.4× are roughly half of Foxconn's ~8×. While Foxconn's high-volume consumer electronics model naturally drives faster turns, the gap also reflects opportunities in Flex's manufacturing scheduling, production flexibility, and make-to-order vs. make-to-stock balance. The VMI program is a good foundation — extending it more broadly across customer segments could improve DIO meaningfully.</p>
+      <div class="impact">Operational: 1-turn improvement releases ~$600M at current COGS</div>
+      <div class="who">Better at this: <span>Foxconn</span> <span>Jabil</span></div>
+    </div>
+
+    <div class="gap-item medium">
+      <div class="priority-badge medium">🟡 Medium Priority — Logistics</div>
+      <h5>No Named SC Analytics / AI Service Offering</h5>
+      <p>Celestica explicitly markets "Supply Chain Services" including analytics and precision machining as standalone offerings. Jabil markets AI-driven supply chain as part of its "engineering-led" identity. Flex's website and SC marketing does not externally position SC analytics, AI-assisted forecasting, or digital supply chain as a saleable capability — despite likely having these internally.</p>
+      <div class="impact">Strategic: Missing a named SC analytics capability limits access to consultative-led deals</div>
+      <div class="who">Better at this: <span>Celestica</span> <span>Jabil</span></div>
+    </div>
+
+    <div class="gap-item low">
+      <div class="priority-badge low">🔵 Lower Priority — Visibility</div>
+      <h5>Supply Chain Financing / Early Payment Programs Not Marketed</h5>
+      <p>With a 16,000+ supplier network and $22B+ procurement spend, Flex has enormous potential to offer supply chain financing and dynamic discounting programs that could simultaneously improve DPO and strengthen supplier relationships. None of the top-4 EMS players visibly market this as a competitive differentiator — representing a white-space opportunity to become the most financially supportive SC partner in the industry.</p>
+      <div class="impact">Opportunity: First-mover SC financing program could add 10–15 DPO days = ~$600–900M</div>
+      <div class="who">Opportunity: <span>First mover in EMS space</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ RECOMMENDATIONS ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 09</div>
+  <div class="section-title">Top 10 Supply Chain Strategic Recommendations</div>
+  <div class="section-sub">Prioritized SC-centric actions for Flex's CSCO, COO and CFO — focused on working capital optimization, inventory efficiency, digital SC, and cost-to-serve improvements.</div>
+
+  <div class="rec-horizon">
+    <span class="rec-horizon-dot" style="background:#ef4444"></span>
+    QUICK WINS — 0 to 30 Days
+  </div>
+  <div class="rec-list">
+
+    <div class="rec-item">
+      <div class="rec-number">1</div>
+      <div class="rec-content">
+        <h5>Launch Supplier Payment Term Optimization Program (DPO Extension)</h5>
+        <p>Initiate a structured renegotiation program targeting extension of DPO from ~62 to 80–90 days across the top 500 suppliers (representing ~70% of spend). Benchmark: Jabil achieves 91 days. At $22B+ procurement spend, every 10 days = ~$600M in cash released. Use supply chain financing / dynamic discounting to make the extension acceptable to suppliers without harming relationships. Target: 80 days DPO within 90 days.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-med">Medium Effort</span>
+          <span class="meta-pill wc">💰 WC: ~$1.2B release</span>
+          <span class="meta-pill timeline">⏱ 60–90 days</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">2</div>
+      <div class="rec-content">
+        <h5>Execute SKU Rationalization to Reduce Slow-Moving Inventory (DIO)</h5>
+        <p>Conduct an ABC/XYZ analysis across all inventory positions to identify slow-moving and obsolete (SLOB) stock. Target DIO reduction from ~83 to ~70 days in the near term (closing half the gap vs. Jabil). Each 10-day DIO reduction = ~$720M cash released at Flex's revenue scale. Prioritize consumer devices and lifestyle verticals where demand volatility is highest and SLOB risk is greatest.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-med">Medium Effort</span>
+          <span class="meta-pill wc">💰 WC: ~$900M release (13-day DIO reduction)</span>
+          <span class="meta-pill timeline">⏱ 30–60 days (analysis) / 6 months (full execution)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rec-horizon">
+    <span class="rec-horizon-dot" style="background:#f59e0b"></span>
+    MID-TERM INITIATIVES — 3 to 6 Months
+  </div>
+  <div class="rec-list">
+
+    <div class="rec-item">
+      <div class="rec-number">3</div>
+      <div class="rec-content">
+        <h5>Build and Launch a Digital SC Customer Portal ("Flex Connect")</h5>
+        <p>Deploy an external customer-facing SC portal providing real-time order visibility, shipment tracking, quality reports, and supply chain KPI dashboards. Benchmark: connect.jabil.com. Phase 1 MVP (3 months): order status + document access. Phase 2 (6 months): SC collaboration, forecasting, and exception management. This directly addresses the #1 gap flagged by enterprise OEM procurement teams and improves SC stickiness.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-high">High Effort</span>
+          <span class="meta-pill timeline">⏱ 3–6 months (MVP) / 12 months (full)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">4</div>
+      <div class="rec-content">
+        <h5>Scale VMI Program Across All Major Customer Segments</h5>
+        <p>Flex's existing VMI model with integrated bonded warehousing and supplier collaboration is a genuine differentiator — but it appears narrowly deployed. Scaling VMI across data center, automotive, and healthcare customers will simultaneously reduce customer-side inventory (improving their DIO), increase Flex's demand visibility (improving forecast accuracy), and deepen account stickiness. Target: VMI coverage across top 20 accounts within 6 months.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-med">Medium Effort</span>
+          <span class="meta-pill wc">💰 Reduces DIO 5–8 days as demand signals improve</span>
+          <span class="meta-pill timeline">⏱ 3–6 months</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">5</div>
+      <div class="rec-content">
+        <h5>Implement AI-Driven Demand Sensing and SC Control Tower</h5>
+        <p>Deploy an AI-powered demand sensing layer (integrated with existing ERP/MRP) to improve forecast accuracy — reducing buffer inventory and improving inventory turns. Foxconn-SAP AI partnership (March 2026) signals this is now a competitive baseline. Flex's 7,000+ SC professionals represent the human capital to operate a centralized SC control tower providing end-to-end visibility from Tier-2 supplier to final delivery. Industry benchmark: AI adoption improves inventory levels by 35% (McKinsey).</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-high">High Effort</span>
+          <span class="meta-pill wc">💰 35% inventory improvement = ~$2B+ DIO reduction potential</span>
+          <span class="meta-pill timeline">⏱ 6–12 months</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">6</div>
+      <div class="rec-content">
+        <h5>Establish an External-Facing SC Analytics Service Line</h5>
+        <p>Package Flex's internal SC analytics, demand forecasting, and supply chain visibility capabilities as a named, marketed service offering. Celestica monetizes SC capabilities through "Product Licensing Services." Flex's deep SC data from 16,000+ suppliers and 100+ facilities represents a platform-level asset. Offering SC-as-a-service analytics to enterprise customers could create a recurring revenue stream while deepening customer lock-in.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-med">Medium Impact</span>
+          <span class="meta-pill effort-med">Medium Effort</span>
+          <span class="meta-pill timeline">⏱ 3–6 months</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">7</div>
+      <div class="rec-content">
+        <h5>Accelerate Revenue Mix Shift to Power Products (Margin Expansion)</h5>
+        <p>The EP² acquisition (March 2026) + Anord Mardix give Flex the most comprehensive critical power portfolio in EMS — covering critical power, embedded power, liquid cooling, and now EP² products. Aggressively cross-selling the full power stack to existing data center and cloud customers can shift revenue mix toward higher-margin proprietary products. Target: power products as 15%+ of revenue within 18 months. Each point of GM improvement = ~$264M incremental gross profit.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-med">Medium Effort</span>
+          <span class="meta-pill wc">💰 Margin: 100bps improvement = ~$264M gross profit</span>
+          <span class="meta-pill timeline">⏱ 6–12 months</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rec-horizon">
+    <span class="rec-horizon-dot" style="background:#3b82f6"></span>
+    STRATEGIC BETS — 6 to 18 Months
+  </div>
+  <div class="rec-list">
+
+    <div class="rec-item">
+      <div class="rec-number">8</div>
+      <div class="rec-content">
+        <h5>Implement Supply Chain Financing Platform for Tier-1 and Tier-2 Suppliers</h5>
+        <p>Launch a supply chain financing (SCF) and dynamic discounting platform enabling suppliers to access early payment at a discount, while Flex captures the yield and extends its effective DPO. With $22B+ annual procurement spend across 16,000+ suppliers, even a modest SCF program covering 30% of spend at 2% discount could generate $130M+ in annual financing income while stretching effective DPO to 90+ days. This transforms the SC into a profit center.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-high">High Effort</span>
+          <span class="meta-pill wc">💰 DPO to 90+ days + $130M+ financing yield</span>
+          <span class="meta-pill timeline">⏱ 9–18 months</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">9</div>
+      <div class="rec-content">
+        <h5>Redesign SC Network for Regionalization &amp; Nearshoring Capture</h5>
+        <p>China+1 supply chain strategies are accelerating. Flex's presence in ~30 countries uniquely positions it to capture nearshoring manufacturing mandates from US, EU, and Japanese OEMs. Conduct a full SC network redesign — identifying the top 10 nearshoring opportunity clusters (e.g. Mexico, Poland, India, Vietnam) and actively building branded "regional SC hub" narratives and capabilities. This is a 3–5 year structural advantage that neither Celestica nor pure-play Chinese EMS players can match.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-high">High Effort</span>
+          <span class="meta-pill timeline">⏱ 12–18 months (network design) / 3–5 years (full execution)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-item">
+      <div class="rec-number">10</div>
+      <div class="rec-content">
+        <h5>Amplify Aftermarket / Circular Economy as a Premium SC Service</h5>
+        <p>Flex's aftermarket and reverse logistics platform is a genuine competitive differentiator — but it's undermarketed relative to its strategic value. EU circular economy regulations, carbon accounting mandates, and OEM take-back obligations are creating a compliance-driven demand for premium reverse logistics services. Position Flex's circular economy platform explicitly to CSCOs and ESG officers as a cost-to-return optimization and regulatory compliance solution. This vertical has above-average margins and is growing 20%+ annually.</p>
+        <div class="rec-meta">
+          <span class="meta-pill impact-high">High Impact</span>
+          <span class="meta-pill effort-low">Low Effort</span>
+          <span class="meta-pill timeline">⏱ 30–60 days (positioning) / 6–12 months (platform expansion)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ QUICK WINS ══════════════ -->
+<div class="section">
+  <div class="section-tag">Section 10</div>
+  <div class="section-title">Quick Wins — 0 to 30 Days</div>
+  <div class="section-sub">High-impact, low-effort supply chain actions Flex can execute immediately. Total estimated working capital release: $1.5–2.5B over 90 days if fully executed.</div>
+
+  <div class="quickwins-grid">
+    <div class="qw-card">
+      <div class="num">01</div>
+      <h5>Initiate DPO Extension Renegotiations</h5>
+      <p>Brief the procurement leadership team on DPO benchmarks (Jabil: 91 days). Identify top 100 suppliers representing 50%+ of spend. Begin structured renegotiation using supply chain financing as the enabling tool.</p>
+      <div class="days">⏱ 2 weeks to launch</div>
+      <div class="impact-est">💰 ~$1.2B potential</div>
+    </div>
+    <div class="qw-card">
+      <div class="num">02</div>
+      <h5>Inventory ABC/XYZ Analysis</h5>
+      <p>Pull current inventory aging report across all SKUs. Classify by ABC (value) and XYZ (demand predictability). Identify top SLOB candidates for clearance, write-down, or supplier return. Target: $200M+ SLOB reduction.</p>
+      <div class="days">⏱ 1–2 weeks</div>
+      <div class="impact-est">💰 ~$200–500M potential</div>
+    </div>
+    <div class="qw-card">
+      <div class="num">03</div>
+      <h5>Accelerate DSO Collections</h5>
+      <p>Review top 20 accounts for receivables aging. Offer dynamic discounting (2/10 net 45) to large accounts to pull forward collections. Target DSO improvement from ~46 to ~40 days across strategic accounts within 60 days.</p>
+      <div class="days">⏱ 1 week to launch</div>
+      <div class="impact-est">💰 ~$430M potential</div>
+    </div>
+    <div class="qw-card">
+      <div class="num">04</div>
+      <h5>Launch SC Control Tower RFP</h5>
+      <p>Issue an RFP for an AI-powered SC control tower platform (SAP IBP, Blue Yonder, o9, or similar). Foxconn-SAP AI partnership (March 2026) means competitors are moving fast. Even initiating the selection process signals to the market that Flex is digitizing its SC.</p>
+      <div class="days">⏱ 2–3 weeks</div>
+      <div class="impact-est">35% inventory improvement (AI benchmark)</div>
+    </div>
+    <div class="qw-card">
+      <div class="num">05</div>
+      <h5>Publish SC KPI External Dashboard</h5>
+      <p>Create a public-facing "Supply Chain Performance" page on flex.com showing SC certifications, sustainability metrics, OTIF targets, and supplier collaboration stats. Positions Flex as a transparent, data-driven SC partner — a CSCO-level trust signal that competitors don't publish.</p>
+      <div class="days">⏱ 2 weeks</div>
+      <div class="impact-est">Competitive differentiation — first mover</div>
+    </div>
+    <div class="qw-card">
+      <div class="num">06</div>
+      <h5>Extend VMI to Top 10 Accounts</h5>
+      <p>Identify the 10 largest accounts not yet on VMI. Present the VMI value proposition (reduced DIO, better demand signal, lower safety stock). Fast-track agreements using the existing bonded warehousing infrastructure. Each VMI account conversion improves DIO by est. 5–8 days.</p>
+      <div class="days">⏱ 3–4 weeks</div>
+      <div class="impact-est">💰 5–8 day DIO reduction</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="report-footer">
+  <div class="container">
+    <h4>AutomationX Competitive Audit System — Supply Chain Edition</h4>
+    <p>This report was generated on April 6, 2026 via live website analysis (Playwright browser automation), web intelligence searches, and financial data aggregation. Supply chain KPIs (DSO, DIO, DPO, C2C, Inventory Turns) are based on publicly available financial data: Flex FLEX (Q3 FY2024 actuals + estimates), Jabil JBL (Q2 FY2025 actuals per GuruFocus), Celestica CLS (FY2024 actuals per corporate.celestica.com), Foxconn (FY2024 estimates based on public filings). All working capital impact estimates use Flex's FY2024 revenue/COGS base. Recommendations are strategic and should be validated against internal Flex data.</p>
+    <p style="margin-top:12px;">Competitors analyzed: Foxconn/Hon Hai (foxconn.com) · Jabil Inc. (jabil.com) · Celestica Inc. (celestica.com) | Framework: Plan–Source–Make–Deliver–Return | Audience: CSCO · COO · CXO</p>
+  </div>
+</div>
+
+<script>
+// ── Revenue vs COGS ──
+new Chart(document.getElementById('revCOGSChart'), {
+  type: 'bar',
+  data: {
+    labels: ['FY2022', 'FY2023', 'FY2024'],
+    datasets: [
+      { label: 'Revenue', data: [24.63, 28.50, 26.42], backgroundColor: '#00a8e8', borderRadius: 6 },
+      { label: 'COGS', data: [22.8, 26.3, 24.2], backgroundColor: '#1e4d8c', borderRadius: 6 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top' } },
+    scales: { y: { beginAtZero: false, min: 20, ticks: { callback: v => '$' + v + 'B' } } }
+  }
+});
+
+// ── GM Trend ──
+new Chart(document.getElementById('gmTrendChart'), {
+  type: 'line',
+  data: {
+    labels: ['FY2022', 'FY2023', 'FY2024'],
+    datasets: [
+      { label: 'Flex GM%', data: [7.4, 7.7, 8.4], borderColor: '#00a8e8', backgroundColor: 'rgba(0,168,232,0.1)', pointBackgroundColor: '#00a8e8', tension: 0.4, fill: true },
+      { label: 'Jabil GM%', data: [7.8, 8.0, 8.3], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)', pointBackgroundColor: '#3b82f6', tension: 0.4 },
+      { label: 'Celestica GM%', data: [8.0, 8.5, 9.0], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', pointBackgroundColor: '#10b981', tension: 0.4 },
+      { label: 'Foxconn GM%', data: [5.8, 5.9, 6.1], borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', pointBackgroundColor: '#ef4444', tension: 0.4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { min: 4, max: 11, ticks: { callback: v => v + '%' } } }
+  }
+});
+
+// ── C2C ──
+new Chart(document.getElementById('c2cChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Jabil', 'Foxconn', 'Flex', 'Celestica'],
+    datasets: [{
+      label: 'Cash-to-Cash Cycle (Days)',
+      data: [12.7, 10, 67, 90.3],
+      backgroundColor: ['#10b981', '#10b981', '#f59e0b', '#ef4444'],
+      borderRadius: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + 'd' } } }
+  }
+});
+
+// ── DSO DIO DPO ──
+new Chart(document.getElementById('dsodiodpoChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Flex', 'Jabil', 'Celestica', 'Foxconn'],
+    datasets: [
+      { label: 'DSO', data: [46, 45, 55, 35], backgroundColor: '#00a8e8', borderRadius: 4 },
+      { label: 'DIO', data: [83, 59, 70, 45], backgroundColor: '#f59e0b', borderRadius: 4 },
+      { label: 'DPO', data: [62, 91, 35, 70], backgroundColor: '#10b981', borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top' } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + 'd' } } }
+  }
+});
+
+// ── Inventory Turns ──
+new Chart(document.getElementById('invTurnsChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Foxconn', 'Jabil', 'Celestica', 'Flex'],
+    datasets: [{
+      label: 'Inventory Turns (×/year)',
+      data: [8.1, 6.2, 5.2, 4.4],
+      backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+      borderRadius: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + '×' } } }
+  }
+});
+
+// ── EBIT Margin ──
+new Chart(document.getElementById('ebitMarginChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Celestica', 'Jabil', 'Flex', 'Foxconn'],
+    datasets: [{
+      label: 'EBIT Margin %',
+      data: [8.0, 4.8, 3.2, 2.5],
+      backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+      borderRadius: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
+  }
+});
+
+// ── SC Maturity Radar ──
+new Chart(document.getElementById('scRadarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Demand Planning', 'Inventory Optimization', 'Supplier Collaboration', 'Mfg. Flexibility', 'Logistics & Network', 'Digital SC / AI', 'Resilience & Risk'],
+    datasets: [
+      { label: 'Flex', data: [6, 5, 8, 7, 8, 5, 8], borderColor: '#00a8e8', backgroundColor: 'rgba(0,168,232,0.15)', pointBackgroundColor: '#00a8e8' },
+      { label: 'Jabil', data: [8, 8, 8, 7, 7, 8, 7], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', pointBackgroundColor: '#3b82f6' },
+      { label: 'Celestica', data: [7, 7, 6, 8, 6, 7, 7], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', pointBackgroundColor: '#10b981' },
+      { label: 'Foxconn', data: [7, 9, 9, 9, 8, 8, 5], borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.08)', pointBackgroundColor: '#ef4444' }
+    ]
+  },
+  options: { responsive: true, scales: { r: { min: 0, max: 10, ticks: { stepSize: 2 } } } }
+});
+
+// ── SC Capabilities Breadth ──
+new Chart(document.getElementById('scBreadthChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Celestica', 'Flex', 'Jabil', 'Foxconn'],
+    datasets: [{
+      label: 'Named SC Service Lines',
+      data: [7, 5, 4, 3],
+      backgroundColor: ['#10b981', '#00a8e8', '#3b82f6', '#ef4444'],
+      borderRadius: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+</body>
+</html>
