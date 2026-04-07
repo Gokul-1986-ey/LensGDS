@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,46 +11,82 @@ import { Badge } from '@/components/ui/badge';
 import { useAuditStore } from '@/store/audit-store';
 
 const schema = z.object({
-  targetUrl: z.string().url('Enter a valid URL (e.g. https://example.com)'),
+  targetUrl: z.string().url('Enter a valid URL (e.g. https://pepsico.com)'),
   industry: z.string().min(2, 'Enter the industry or niche'),
 });
 
 type FormData = z.infer<typeof schema>;
 
+const EXAMPLE_AUDITS = [
+  { url: 'https://pepsico.com',      industry: 'Consumer Packaged Goods' },
+  { url: 'https://flex.com',         industry: 'Electronics Manufacturing Services' },
+  { url: 'https://suncor.com',       industry: 'Oil & Gas / Energy' },
+  { url: 'https://unilever.com',     industry: 'Consumer Packaged Goods' },
+  { url: 'https://jnj.com',          industry: 'Healthcare / Pharmaceuticals' },
+  { url: 'https://ford.com',         industry: 'Automotive Manufacturing' },
+];
+
 export default function AuditPage() {
-  const router = useRouter();
-  const { status, progress, report, htmlContent, startAudit, setReport, setError, addProgress, setStatus, clearAudit } = useAuditStore();
+  const {
+    status, progress, report, htmlContent,
+    startAudit, setReport, setError, addProgress, clearAudit,
+  } = useAuditStore();
+
   const [isRunning, setIsRunning] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { targetUrl: '', industry: '' },
   });
 
+  // ── Run audit via SSE stream ──────────────────────────────
   const onSubmit = async (data: FormData) => {
     setIsRunning(true);
     startAudit({ targetUrl: data.targetUrl, industry: data.industry });
 
     try {
-      addProgress('Sending audit request to API...');
-      const res = await fetch('/api/audit', {
+      const response = await fetch('/api/audit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({ error: 'Audit failed' }));
-        throw new Error(errBody.error || `HTTP ${res.status}`);
+      if (!response.ok || !response.body) {
+        const err = await response.json().catch(() => ({ error: 'Audit request failed' }));
+        throw new Error(err.error || `HTTP ${response.status}`);
       }
 
-      const result = await res.json();
-      addProgress('Audit complete — report generated.');
-      setReport(result.report, result.html);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process complete SSE lines
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';   // keep incomplete last line
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try {
+            const event = JSON.parse(line.slice(6));
+            if (event.type === 'progress') {
+              addProgress(event.message as string);
+            } else if (event.type === 'complete') {
+              addProgress('✅ Report generated successfully.');
+              setReport(event.report, event.html as string);
+            } else if (event.type === 'error') {
+              throw new Error(event.message as string);
+            }
+          } catch (parseErr) {
+            // Ignore malformed SSE lines
+          }
+        }
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
       setError(msg);
@@ -60,7 +95,8 @@ export default function AuditPage() {
     }
   };
 
-  const handleDownloadHtml = () => {
+  // ── Export helpers ────────────────────────────────────────
+  const downloadHtml = () => {
     if (!htmlContent || !report) return;
     const blob = new Blob([htmlContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
@@ -71,7 +107,7 @@ export default function AuditPage() {
     URL.revokeObjectURL(url);
   };
 
-  const handleDownloadPdf = async () => {
+  const downloadPdf = async () => {
     if (!htmlContent || !report) return;
     try {
       const res = await fetch('/api/export/pdf', {
@@ -88,16 +124,26 @@ export default function AuditPage() {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      alert('PDF export requires Playwright to be installed on the server. HTML download is always available.');
+      alert('PDF export requires Playwright. Run: npm install playwright && npx playwright install chromium\n\nHTML download always works.');
     }
   };
 
+  const previewInBrowser = () => {
+    if (!htmlContent) return;
+    const win = window.open('', '_blank');
+    if (win) { win.document.open(); win.document.write(htmlContent); win.document.close(); }
+  };
+
+  // ── Render ────────────────────────────────────────────────
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
+
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Competitive Audit</h1>
         <p className="text-muted-foreground mt-1">
-          Enter a target website and industry to generate a full supply chain competitive intelligence report.
+          AI-powered supply chain competitive intelligence — Plan → Source → Make → Deliver → Return.
+          Generates a McKinsey-quality report with real company data, benchmarks, and recommendations.
         </p>
       </div>
 
@@ -106,15 +152,16 @@ export default function AuditPage() {
         <CardHeader>
           <CardTitle>Start New Audit</CardTitle>
           <CardDescription>
-            The system will analyze the target website, find top competitors, and generate a comprehensive report.
+            Enter a company URL and industry. Claude will analyse the company, identify competitors,
+            benchmark supply chain KPIs, and generate a full C-suite report.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Target Website URL</label>
+              <label className="text-sm font-medium">Target Company Website URL</label>
               <Input
-                placeholder="https://flex.com"
+                placeholder="https://pepsico.com"
                 {...register('targetUrl')}
                 disabled={isRunning}
               />
@@ -122,10 +169,11 @@ export default function AuditPage() {
                 <p className="text-sm text-destructive">{errors.targetUrl.message}</p>
               )}
             </div>
+
             <div className="space-y-2">
-              <label className="text-sm font-medium">Industry / Niche</label>
+              <label className="text-sm font-medium">Industry / Sector</label>
               <Input
-                placeholder="e.g. Electronics Manufacturing Services, SaaS, Logistics"
+                placeholder="e.g. Consumer Packaged Goods, Electronics Manufacturing Services, Oil & Gas"
                 {...register('industry')}
                 disabled={isRunning}
               />
@@ -133,13 +181,39 @@ export default function AuditPage() {
                 <p className="text-sm text-destructive">{errors.industry.message}</p>
               )}
             </div>
+
+            {/* Example quick-fill buttons */}
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">Quick examples:</p>
+              <div className="flex flex-wrap gap-2">
+                {EXAMPLE_AUDITS.map((ex) => (
+                  <button
+                    key={ex.url}
+                    type="button"
+                    disabled={isRunning}
+                    onClick={() => {
+                      setValue('targetUrl', ex.url);
+                      setValue('industry', ex.industry);
+                    }}
+                    className="text-xs border rounded-md px-3 py-1.5 hover:bg-accent transition-colors disabled:opacity-40"
+                  >
+                    {ex.url.replace('https://', '')}
+                  </button>
+                ))}
+              </div>
+            </div>
           </CardContent>
+
           <CardFooter className="flex gap-3">
             <Button type="submit" disabled={isRunning}>
-              {isRunning ? 'Running Audit...' : 'Run Competitive Audit'}
+              {isRunning ? (
+                <span className="flex items-center gap-2">
+                  <span className="animate-spin">⟳</span> Generating Audit...
+                </span>
+              ) : 'Run Competitive Audit'}
             </Button>
-            {status === 'complete' && (
-              <Button type="button" variant="outline" onClick={clearAudit}>
+            {(status === 'complete' || status === 'error') && (
+              <Button type="button" variant="outline" onClick={clearAudit} disabled={isRunning}>
                 New Audit
               </Button>
             )}
@@ -151,83 +225,33 @@ export default function AuditPage() {
       {progress.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
+            <CardTitle className="flex items-center gap-3 text-base">
               Audit Progress
-              <Badge variant={status === 'complete' ? 'default' : status === 'error' ? 'destructive' : 'secondary'}>
+              <Badge variant={
+                status === 'complete' ? 'default'
+                : status === 'error' ? 'destructive'
+                : 'secondary'
+              }>
                 {status}
               </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-1 font-mono text-sm">
+            <div className="space-y-1 font-mono text-sm max-h-64 overflow-y-auto">
               {progress.map((msg, i) => (
                 <div key={i} className="flex items-start gap-2">
-                  <span className="text-muted-foreground select-none">{String(i + 1).padStart(2, '0')}.</span>
+                  <span className="text-muted-foreground select-none shrink-0">
+                    {String(i + 1).padStart(2, '0')}.
+                  </span>
                   <span>{msg}</span>
                 </div>
               ))}
               {isRunning && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <span className="animate-pulse">●</span> Processing...
+                <div className="flex items-center gap-2 text-muted-foreground pt-1">
+                  <span className="animate-pulse">●</span>
+                  <span>Claude is thinking...</span>
                 </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Report Actions */}
-      {status === 'complete' && report && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Report Ready: {report.targetCompany.name}</CardTitle>
-            <CardDescription>
-              {report.competitors.length} competitors analyzed &middot; {report.gaps.length} gaps identified &middot; {report.recommendations.length} recommendations
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              {report.execKpis.map((kpi, i) => (
-                <div
-                  key={i}
-                  className={`rounded-lg border p-4 ${
-                    kpi.color === 'success'
-                      ? 'border-t-2 border-t-green-500'
-                      : kpi.color === 'danger'
-                      ? 'border-t-2 border-t-red-500'
-                      : kpi.color === 'warn'
-                      ? 'border-t-2 border-t-yellow-500'
-                      : 'border-t-2 border-t-blue-500'
-                  }`}
-                >
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">{kpi.label}</p>
-                  <p className="text-2xl font-bold mt-1">{kpi.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{kpi.sublabel}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-3">
-              <Button onClick={handleDownloadHtml}>
-                Download HTML Report
-              </Button>
-              <Button variant="outline" onClick={handleDownloadPdf}>
-                Download PDF Report
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (htmlContent) {
-                    const win = window.open('', '_blank');
-                    if (win) {
-                      win.document.write(htmlContent);
-                      win.document.close();
-                    }
-                  }
-                }}
-              >
-                Preview in Browser
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -237,7 +261,121 @@ export default function AuditPage() {
       {status === 'error' && (
         <Card className="border-destructive">
           <CardContent className="pt-6">
-            <p className="text-destructive font-medium">Audit failed: {useAuditStore.getState().error}</p>
+            <p className="text-destructive font-medium text-sm">
+              ⚠ Audit failed: {useAuditStore.getState().error}
+            </p>
+            <p className="text-muted-foreground text-xs mt-2">
+              Make sure ANTHROPIC_API_KEY is set in .env.local and restart the dev server.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Report Ready */}
+      {status === 'complete' && report && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Report Ready: {report.targetCompany.name}</CardTitle>
+            <CardDescription>
+              {report.competitors.length} competitors analysed · {report.gaps.length} supply chain gaps identified · {report.recommendations.length} strategic recommendations
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+
+            {/* Executive KPI cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {report.execKpis.map((kpi, i) => (
+                <div
+                  key={i}
+                  className={`rounded-lg border p-4 ${
+                    kpi.color === 'success' ? 'border-t-2 border-t-green-500'
+                    : kpi.color === 'danger' ? 'border-t-2 border-t-red-500'
+                    : kpi.color === 'warn' ? 'border-t-2 border-t-yellow-500'
+                    : 'border-t-2 border-t-blue-500'
+                  }`}
+                >
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider">{kpi.label}</p>
+                  <p className="text-2xl font-bold mt-1">{kpi.value}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{kpi.sublabel}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Strategic narrative */}
+            {report.strategicNarrative && (
+              <div className="rounded-lg bg-muted/50 border p-4 text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: report.strategicNarrative }}
+              />
+            )}
+
+            {/* Competitors chips */}
+            {report.competitors.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Competitors Analysed</p>
+                <div className="flex flex-wrap gap-2">
+                  {report.competitors.map((c) => (
+                    <Badge key={c.shortName} variant="outline">{c.name}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Value chain summary */}
+            {report.valueChain.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Value Chain Status</p>
+                <div className="flex gap-2 flex-wrap">
+                  {report.valueChain.map((step) => (
+                    <span
+                      key={step.phase}
+                      className={`text-xs px-3 py-1.5 rounded-md font-medium ${
+                        step.status === 'strong' ? 'bg-green-100 text-green-800'
+                        : step.status === 'gap' ? 'bg-red-100 text-red-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                      }`}
+                    >
+                      {step.phase.toUpperCase()} · {step.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Export actions */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button onClick={downloadHtml}>
+                ⬇ Download HTML Report
+              </Button>
+              <Button variant="outline" onClick={downloadPdf}>
+                ⬇ Download PDF Report
+              </Button>
+              <Button variant="outline" onClick={previewInBrowser}>
+                ↗ Preview in New Tab
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* How it works — shown when idle */}
+      {status === 'idle' && (
+        <Card className="bg-muted/30">
+          <CardContent className="pt-6">
+            <h3 className="font-semibold text-sm mb-3">How it works</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-muted-foreground">
+              <div>
+                <p className="font-medium text-foreground mb-1">1. You provide a URL</p>
+                <p>Enter any company website and its industry sector. Use the quick-fill examples to get started instantly.</p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground mb-1">2. Claude analyses</p>
+                <p>Claude Opus analyses the company's supply chain across Plan → Source → Make → Deliver → Return, finds 3 real competitors, and benchmarks financials & working capital.</p>
+              </div>
+              <div>
+                <p className="font-medium text-foreground mb-1">3. You get a C-suite report</p>
+                <p>A McKinsey-quality HTML/PDF report with charts, gap analysis, and 7 strategic recommendations — ready to share with your CSCO, COO, or CXO.</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
