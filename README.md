@@ -44,6 +44,7 @@ The key insight: most supply chain assessments follow predictable patterns. A $5
 │   [FUTURE] LLM Agent calls replace mock-data.ts                 │
 └──────────────────────────────────────────────────────────────────┘
 ```
+<img width="1360" height="1004" alt="image" src="https://github.com/user-attachments/assets/9493674a-03d7-40c0-868d-8623cc374f5e" />
 
 ### Data Flow End-to-End
 
