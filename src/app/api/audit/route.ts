@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
         const claudeStream = client.messages.stream({
           model: 'claude-opus-4-6',
-          max_tokens: 8000,
+          max_tokens: 16000,
           system: systemPrompt,
           messages: [{ role: 'user', content: userPrompt }],
         });
@@ -360,7 +360,7 @@ function parseClaudeResponse(
   try {
     parsed = JSON.parse(cleaned);
   } catch {
-    throw new Error('Failed to parse Claude response as JSON. The model may have hit token limits — try a smaller company or simpler industry.');
+    throw new Error(`Failed to parse Claude response as JSON (received ${cleaned.length} chars). The response may have been truncated — try again.`);
   }
 
   // Ensure required top-level fields have fallbacks

@@ -25,6 +25,8 @@ import {
   DEFAULT_OPPORTUNITIES,
   DEFAULT_QUESTIONS,
 } from '@/data/mock-data';
+import { auditToAssessment } from '@/lib/audit-to-assessment';
+import type { AuditReport } from '@/types/audit';
 
 interface AssessmentState {
   assessment: Assessment | null;
@@ -32,6 +34,7 @@ interface AssessmentState {
 
   // Actions
   createAssessment: (profile: ClientProfile) => void;
+  populateFromAudit: (report: AuditReport) => void;
   clearAssessment: () => void;
 
   // Validation / Workshop
@@ -73,6 +76,11 @@ export const useAssessmentStore = create<AssessmentState>()(
           updatedAt: new Date().toISOString(),
         };
         set({ assessment });
+      },
+
+      populateFromAudit: (report: AuditReport) => {
+        const { assessment, heuristics } = auditToAssessment(report);
+        set({ assessment, heuristics });
       },
 
       clearAssessment: () => set({ assessment: null }),

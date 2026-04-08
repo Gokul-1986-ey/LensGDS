@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
 /**
  * POST /api/export/pdf
  * Accepts { html, companyName } and returns a PDF blob.
  *
- * Requires Playwright to be installed:
- *   npm install playwright
- *
- * Falls back to an error message if Playwright is not available.
+ * Uses @sparticuz/chromium on Vercel/serverless, falls back to local Playwright chromium in dev.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -17,36 +17,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'html content is required' }, { status: 400 });
     }
 
-    // Dynamic import — only loads Playwright if installed
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let chromium: any;
-    try {
-      const moduleName = 'playwright';
-      const pw = await (Function('m', 'return import(m)')(moduleName));
-      chromium = pw.chromium;
-    } catch {
-      return NextResponse.json(
-        { error: 'Playwright is not installed. Run: npm install playwright && npx playwright install chromium' },
-        { status: 501 }
-      );
+    let browser: any;
+
+    const isVercel = process.env.VERCEL === '1' || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+    if (isVercel) {
+      // Serverless path — uses @sparticuz/chromium (smaller, lambda-compatible)
+      try {
+        const [chromium, { chromium: playwrightChromium }] = await Promise.all([
+          import('@sparticuz/chromium'),
+          import('playwright-core'),
+        ]);
+        browser = await playwrightChromium.launch({
+          args: chromium.default.args,
+          executablePath: await chromium.default.executablePath(),
+          headless: true,
+        });
+      } catch {
+        return NextResponse.json(
+          { error: 'PDF generation unavailable in this environment.' },
+          { status: 501 }
+        );
+      }
+    } else {
+      // Local dev path — uses full Playwright
+      try {
+        const pw = await import('playwright');
+        browser = await pw.chromium.launch({ headless: true });
+      } catch {
+        return NextResponse.json(
+          { error: 'Playwright not installed. Run: npm install playwright && npx playwright install chromium' },
+          { status: 501 }
+        );
+      }
     }
 
-    const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
-
-    // Load HTML content directly
     await page.setContent(html, { waitUntil: 'networkidle' });
 
-    // Generate PDF matching CLAUDE.md spec
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
-      margin: {
-        top: '15mm',
-        bottom: '15mm',
-        left: '12mm',
-        right: '12mm',
-      },
+      margin: { top: '15mm', bottom: '15mm', left: '12mm', right: '12mm' },
     });
 
     await browser.close();

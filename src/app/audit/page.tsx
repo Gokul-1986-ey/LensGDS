@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuditStore } from '@/store/audit-store';
+import { useAssessmentStore } from '@/store/assessment-store';
+import { useRouter } from 'next/navigation';
 
 const schema = z.object({
   targetUrl: z.string().url('Enter a valid URL (e.g. https://pepsico.com)'),
@@ -27,10 +29,12 @@ const EXAMPLE_AUDITS = [
 ];
 
 export default function AuditPage() {
+  const router = useRouter();
   const {
     status, progress, report, htmlContent,
     startAudit, setReport, setError, addProgress, clearAudit,
   } = useAuditStore();
+  const populateFromAudit = useAssessmentStore((s) => s.populateFromAudit);
 
   const [isRunning, setIsRunning] = useState(false);
 
@@ -79,6 +83,7 @@ export default function AuditPage() {
             } else if (event.type === 'complete') {
               addProgress('✅ Report generated successfully.');
               setReport(event.report, event.html as string);
+              populateFromAudit(event.report);
             } else if (event.type === 'error') {
               throw new Error(event.message as string);
             }
@@ -340,6 +345,20 @@ export default function AuditPage() {
                 </div>
               </div>
             )}
+
+            {/* Dashboard shortcut */}
+            <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
+              <p className="text-sm font-medium mb-1">Audit data loaded into platform</p>
+              <p className="text-xs text-muted-foreground mb-3">
+                Dashboard, Workshop, Simulation and Export tabs are now populated with real data from this audit.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" onClick={() => router.push('/dashboard')}>View Dashboard</Button>
+                <Button size="sm" variant="outline" onClick={() => router.push('/workshop')}>Workshop</Button>
+                <Button size="sm" variant="outline" onClick={() => router.push('/simulation')}>Simulation</Button>
+                <Button size="sm" variant="outline" onClick={() => router.push('/export')}>Export</Button>
+              </div>
+            </div>
 
             {/* Export actions */}
             <div className="flex flex-wrap gap-3 pt-2">
